@@ -23,8 +23,8 @@ void MainMenu::start()
 {
 	int selection;
 	ktuWaikikiText();
-	cout << "Modüllerden birini seçerek işleminize devam edebilirsiniz." << endl;
-	cout << "[1] Sisteme giriş.\n" << "[2] Yeni üye kayıt.\n"<< "[3] Çıkış." << endl;
+	cout << "Modullerden birini secerek isleminize devam edebilirsiniz." << endl;
+	cout << "[1] Sisteme giris.\n" << "[2] Yeni uye kayit.\n"<< "[3] Cikis." << endl;
 
 	cin >> selection;
 	system("CLS");
@@ -38,10 +38,10 @@ void MainMenu::start()
 		break;
 	case 3:
 		ktuWaikikiText();
-		cout << "Başarıyla çıktınız." << endl;
+		cout << "Basariyla ciktiniz." << endl;
 		break;
 	default:
-		cout << "Hatalı seçim yaptınız, lütfen tekrar deneyiniz." << endl;
+		cout << "Hatali secim yaptiniz, lutfen tekrar deneyiniz." << endl;
 		start();
 		break;
 	}
@@ -52,7 +52,7 @@ void MainMenu::GirisMenu()
 {
 	ktuWaikikiText();
 	int selection;
-	cout << "Giriş yapmak istediğiniz modülü seçiniz.\n" << "[1] Müşteri girişi.\n" << "[2] Yönetici girişi." << endl;
+	cout << "Giris yapmak istediginiz modulu seciniz.\n" << "[1] Musteri girisi.\n" << "[2] Yonetici girisi." << endl;
 	cin >> selection;
 	system("CLS");
 	switch (selection)
@@ -64,7 +64,7 @@ void MainMenu::GirisMenu()
 		YoneticiGirisMenu();
 		break;
 	default:
-		cout << "Hatalı seçim yaptınız, lütfen tekrar deneyiniz." << endl;
+		cout << "Hatali secim yaptiniz, lutfen tekrar deneyiniz." << endl;
 		GirisMenu();
 		break;
 	}
@@ -75,9 +75,9 @@ void MainMenu::MusteriGirisMenu()
 	string kullaniciAdi, sifre;
 
 	ktuWaikikiText();
-	cout << "Kullanıcı adınızı giriniz: ";
+	cout << "Kullanici adinizi giriniz: ";
 	cin >> kullaniciAdi;
-	cout << "Şifrenizi giriniz: ";
+	cout << "Sifrenizi giriniz: ";
 	cin >> sifre;
 	cout << "sifre kontrol yapilcak falan" << endl;
 }
@@ -88,23 +88,23 @@ void MainMenu::MusteriKayitMenu()
 	string ad, soyad, telNo, kullaniciAdi, sifre, mail, adres, dogumTarihi;
 
 	ktuWaikikiText();
-	cout << "Adınız: "; cin >> ad;
-	cout << "Soyadınız: "; cin >> soyad;
-	cout << "Doğum Tarihiniz: "; cin >> dogumTarihi;
+	cout << "Adiniz: "; cin >> ad;
+	cout << "Soyadiniz: "; cin >> soyad;
+	cout << "Dogum Tarihiniz: "; cin >> dogumTarihi;
 	cout << "Adresiniz: "; cin >> adres;
-	cout << "Telefon Numaranız: "; cin >> telNo;
+	cout << "Telefon Numaraniz: "; cin >> telNo;
 	cout << "Mail Adresiniz: "; cin >> mail;
 	//mail adresi kontrol edilecek;
-	cout << "Bir kullanıcı adı belirleyiniz: "; cin >> kullaniciAdi;
-	cout << "Bir şifre adı belirleyiniz: "; cin >> sifre;
+	cout << "Bir kullanici adi belirleyiniz: "; cin >> kullaniciAdi;
+	cout << "Bir sifre adi belirleyiniz: "; cin >> sifre;
 
-	cout << "\nKayıt başarılı, keyifli alışverişler." << endl;
+	cout << "\nKayit basarili, keyifli alisverisler." << endl;
 }
 
 void MainMenu::YoneticiGirisMenu()
 {
 	ktuWaikikiText();
-	cout << "Yönetici şifresini giriniz." << endl;
+	cout << "Yonetici sifresini giriniz." << endl;
 }
 
 int main()

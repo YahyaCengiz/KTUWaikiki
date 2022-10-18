@@ -1,5 +1,7 @@
 #include <iostream>
 #include <locale.h>
+#include <fstream>
+
 using namespace std;
 
 class MainMenu
@@ -72,14 +74,28 @@ void MainMenu::GirisMenu()
 
 void MainMenu::MusteriGirisMenu()
 {
-	string kullaniciAdi, sifre;
-
+	string kullaniciAdi, sifre, k, s, tel, tc;
+    int ctr = 0;
 	ktuWaikikiText();
 	cout << "Kullanıcı adınızı giriniz: ";
 	cin >> kullaniciAdi;
 	cout << "Şifrenizi giriniz: ";
 	cin >> sifre;
-	cout << "sifre kontrol yapilcak falan" << endl;
+	ifstream txt("kullanici.txt");
+
+	while(txt >> k >> s >> tel >> tc){
+        if(k == kullaniciAdi && s == sifre){
+            ctr = 1;
+            break;
+        }
+	}
+	txt.close();
+	if(ctr == 1){
+        cout << "giris yapildi" << endl;
+        cout << "telno: " << tel << " tcno: " << tc << endl;
+	}else{
+        cout << "olmadi " << ctr;
+	}
 }
 
 void MainMenu::MusteriKayitMenu()
@@ -98,7 +114,11 @@ void MainMenu::MusteriKayitMenu()
 	cout << "Bir kullanıcı adı belirleyiniz: "; cin >> kullaniciAdi;
 	cout << "Bir şifre adı belirleyiniz: "; cin >> sifre;
 
+	ofstream txt("kullanici.txt", ios::app);
+	txt << kullaniciAdi << " " << sifre << endl;
+
 	cout << "\nKayıt başarılı, keyifli alışverişler." << endl;
+	MusteriGirisMenu();
 }
 
 void MainMenu::YoneticiGirisMenu()

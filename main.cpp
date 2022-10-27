@@ -14,6 +14,13 @@ class MainMenu
 		void MusteriGirisMenu();
 		void MusteriKayitMenu();
 		void YoneticiGirisMenu();
+		void YoneticiMenu();
+        // urun_ekleme(); kurye_ekleme(); sikayet_okuma(); kod_tanimlama(); fatura_goruntuleme();
+        void urun_ekleme();
+        void kurye_ekleme();
+        void sikayet_okuma();
+        void kod_tanimlama();
+        void fatura_goruntuleme();
 
 	private:
 
@@ -41,6 +48,7 @@ public:
     string adres = "-";
     string tel = "-";
     string mail = "-";
+    string kod = "-";
 
 private:
     string sifre;
@@ -102,7 +110,7 @@ void MainMenu::GirisMenu()
 
 void MainMenu::MusteriGirisMenu()
 {
-	string kullaniciAdi, sifre, k, s, tel, mail, ad, soyad, adres, dogum;
+	string kullaniciAdi, sifre, k, s, tel, mail, ad, soyad, adres, dogum,kod;
     int ctr = 0;
 	ktuWaikikiText();
 	cout << "Kullanici adinizi giriniz: ";
@@ -111,7 +119,7 @@ void MainMenu::MusteriGirisMenu()
 	cin >> sifre;
 	ifstream txt("kullanici.txt");
 
-	while(txt >> k >> s >> ad >> soyad >> dogum >> adres >> tel >> mail ){
+	while(txt >> k >> s >> ad >> soyad >> dogum >> adres >> tel >> mail >> kod ){
         if(k == kullaniciAdi && s == sifre){
             ctr = 1;
             break;
@@ -129,7 +137,7 @@ void MainMenu::MusteriGirisMenu()
 void MainMenu::MusteriKayitMenu()
 {
 	//değerler müşteri classına geçirilecek
-	string ad, soyad, telNo, kullaniciAdi, sifre, mail, adres, dogumTarihi;
+	string ad, soyad, telNo, kullaniciAdi, sifre, mail, adres, dogumTarihi,kod="0";
 
 	ktuWaikikiText();
 	cout << "Adiniz: "; cin >> ad;
@@ -143,7 +151,7 @@ void MainMenu::MusteriKayitMenu()
 	cout << "Bir sifre belirleyiniz: "; cin >> sifre;
 
 	ofstream txt("kullanici.txt", ios::app);
-	txt << kullaniciAdi << " " << sifre << " " << ad << " " << soyad << " " << dogumTarihi << " " << adres << " " << telNo << " " << mail << " " << endl;
+	txt << kullaniciAdi << " " << sifre << " " << ad << " " << soyad << " " << dogumTarihi << " " << adres << " " << telNo << " " << mail << " " << kod << endl;
 
 	cout << "\nKayit basarili, keyifli alisverisler." << endl;
 	MusteriGirisMenu();
@@ -154,9 +162,9 @@ void MainMenu::YoneticiGirisMenu()
 {
 	ktuWaikikiText();
     Yonetici yonetici("password");
-	string yoneticiSifre,y,s;
+	string yoneticiSifre,y,s,ad,soyad,dogum,adres,tel,mail,kod;
 	fstream txt("kullanici.txt",ios::app);
-	txt << yonetici.getYoneticiAdi() << " " << yonetici.getSifre() << " " << yonetici.ad << " " << yonetici.soyad << " " <<yonetici.dogum << " "  << yonetici.adres << " " << yonetici.tel << " " << yonetici.mail << endl;
+	txt << yonetici.getYoneticiAdi() << " " << yonetici.getSifre() << " " << yonetici.ad << " " << yonetici.soyad << " " <<yonetici.dogum << " "  << yonetici.adres << " " << yonetici.tel << " " << yonetici.mail << " " << kod << endl;
 
 	txt.close();
 
@@ -164,12 +172,12 @@ void MainMenu::YoneticiGirisMenu()
 	cin >> yoneticiSifre;
 
     txt.open("kullanici.txt",ios::in);
-    while(txt >> y >> s)
+    while(txt >> y >> s >> ad >> soyad >> dogum >> adres >> tel >> mail)
     {
         if(y == yonetici.getYoneticiAdi() && s == yoneticiSifre)
         {
             cout << "Yonetici sistemine hos geldiniz..." << endl;
-            break; // break yerine yonetici paneli acilacak.
+            YoneticiMenu();
         }
         else
         {
@@ -183,6 +191,44 @@ void MainMenu::YoneticiGirisMenu()
         }
     }
 
+}
+
+void MainMenu::YoneticiMenu()
+{
+    int selection;
+    system("CLS");
+    cout << "Modullerden birini secerek isleminize devam edebilirsiniz." << endl;
+    cout << "\n";
+	cout << "[1] Urun Ekleme.\n" << "[2] Kurye Ekleme.\n"<<"[3] Sikayet Oneri Okuma.\n"<<"[4] Indirim Kodu Tanimlama.\n"<<"[5] Fatura Goruntuleme.\n"<<"[6] Cikis.\n"<<endl;
+    cin >> selection;
+    switch(selection)
+    {
+    case 1:
+        urun_ekleme();
+        break;
+
+    }
+}
+
+void MainMenu::urun_ekleme()
+{
+    ofstream urunler("urunler.txt",ios::app);
+    string urun,kategori,fiyat,boyut,renk;
+    cout << "Eklenecek Urun : " << endl;
+    cin >> urun;
+    cout << "Urunun Kategorisi : " << endl;
+    cin >> kategori;
+    cout << "Urunun Fiyati : " << endl;
+    cin >> fiyat;
+    cout << "Urunun Boyutu : " << endl;
+    cin >> boyut;
+    cout << "Urunun Rengi : " << endl;
+    cin >> renk;
+    urunler << urun << " " << kategori << " " << fiyat << " " << boyut << " " << renk << "\n" ;
+
+    urunler.close();
+    cout << "Basariyla Eklendi..." << endl;
+    YoneticiMenu();
 }
 
 int main()

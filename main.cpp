@@ -31,6 +31,7 @@ void MainMenu::start()
 	cin >> selection;
 	system("CLS");
 	system("CLS");
+	system("CLS");
 	switch (selection)
 	{
 	case 1:

@@ -19,6 +19,28 @@ class MainMenu
 
 };
 
+class Yonetici
+{
+public:
+    Yonetici(string s,string y="admin")
+    {
+        yoneticiAdi = y;
+        sifre = s;
+    }
+    string getYoneticiAdi()
+    {
+        return yoneticiAdi;
+    }
+    string getSifre()
+    {
+        return sifre;
+    }
+
+private:
+    string sifre;
+    string yoneticiAdi;
+};
+
 
 void MainMenu::start()
 {
@@ -124,7 +146,35 @@ void MainMenu::MusteriKayitMenu()
 void MainMenu::YoneticiGirisMenu()
 {
 	ktuWaikikiText();
+    Yonetici yonetici("password");
+	string yoneticiSifre,y,s;
+	fstream txt("kullanici.txt",ios::app);
+	txt << yonetici.getYoneticiAdi() << " " << yonetici.getSifre() << endl; // "admin password" seklinde kullanici.txt'ye kayıt yaptı.
+	txt.close();
+
 	cout << "Yonetici sifresini giriniz." << endl;
+	cin >> yoneticiSifre;
+
+    txt.open("kullanici.txt",ios::in);
+    while(txt >> y >> s)
+    {
+        if(y == yonetici.getYoneticiAdi() && s == yoneticiSifre)
+        {
+            cout << "Yonetici sistemine hos geldiniz..." << endl;
+            break; // break yerine yonetici paneli acilacak.
+        }
+        else
+        {
+            if(txt.eof() == true)
+            {
+                cout << "Yanlis sifre girdiniz..." << endl;
+                MainMenu();
+            }
+            else
+                continue;
+        }
+    }
+
 }
 
 int main()

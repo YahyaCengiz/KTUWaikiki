@@ -134,6 +134,5 @@ int main()
 	setlocale(LC_ALL, "Turkish");
 	MainMenu mainMenu;
 	mainMenu.start();
-	cout << "1";
 	return 0;
 }

@@ -35,6 +35,12 @@ public:
     {
         return sifre;
     }
+    string ad="-";
+    string soyad = "-";
+    string dogum = "-";
+    string adres = "-";
+    string tel = "-";
+    string mail = "-";
 
 private:
     string sifre;
@@ -78,6 +84,7 @@ void MainMenu::GirisMenu()
 	cout << "Giris yapmak istediginiz modulu seciniz.\n" << "[1] Musteri girisi.\n" << "[2] Yonetici girisi." << endl;
 	cin >> selection;
 	system("CLS");
+
 	switch (selection)
 	{
 	case 1:
@@ -95,7 +102,7 @@ void MainMenu::GirisMenu()
 
 void MainMenu::MusteriGirisMenu()
 {
-	string kullaniciAdi, sifre, k, s, tel, tc;
+	string kullaniciAdi, sifre, k, s, tel, mail, ad, soyad, adres, dogum;
     int ctr = 0;
 	ktuWaikikiText();
 	cout << "Kullanici adinizi giriniz: ";
@@ -104,7 +111,7 @@ void MainMenu::MusteriGirisMenu()
 	cin >> sifre;
 	ifstream txt("kullanici.txt");
 
-	while(txt >> k >> s >> tel >> tc){
+	while(txt >> k >> s >> ad >> soyad >> dogum >> adres >> tel >> mail ){
         if(k == kullaniciAdi && s == sifre){
             ctr = 1;
             break;
@@ -113,7 +120,7 @@ void MainMenu::MusteriGirisMenu()
 	txt.close();
 	if(ctr == 1){
         cout << "giris yapildi" << endl;
-        cout << "telno: " << tel << " tcno: " << tc << endl;
+        cout << "telno: " << tel << " mail: " << mail << endl;
 	}else{
         cout << "olmadi " << ctr;
 	}
@@ -136,7 +143,7 @@ void MainMenu::MusteriKayitMenu()
 	cout << "Bir sifre belirleyiniz: "; cin >> sifre;
 
 	ofstream txt("kullanici.txt", ios::app);
-	txt << kullaniciAdi << " " << sifre << endl;
+	txt << kullaniciAdi << " " << sifre << " " << ad << " " << soyad << " " << dogumTarihi << " " << adres << " " << telNo << " " << mail << " " << endl;
 
 	cout << "\nKayit basarili, keyifli alisverisler." << endl;
 	MusteriGirisMenu();
@@ -149,7 +156,8 @@ void MainMenu::YoneticiGirisMenu()
     Yonetici yonetici("password");
 	string yoneticiSifre,y,s;
 	fstream txt("kullanici.txt",ios::app);
-	txt << yonetici.getYoneticiAdi() << " " << yonetici.getSifre() << endl; // "admin password" seklinde kullanici.txt'ye kayıt yaptı.
+	txt << yonetici.getYoneticiAdi() << " " << yonetici.getSifre() << " " << yonetici.ad << " " << yonetici.soyad << " " <<yonetici.dogum << " "  << yonetici.adres << " " << yonetici.tel << " " << yonetici.mail << endl;
+
 	txt.close();
 
 	cout << "Yonetici sifresini giriniz." << endl;

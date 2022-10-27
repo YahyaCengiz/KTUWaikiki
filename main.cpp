@@ -1,23 +1,200 @@
 #include <iostream>
-#include <locale.h>
 #include <fstream>
+#include <typeinfo>
 using namespace std;
 
 class MainMenu
 {
-	public:
-		void ktuWaikikiText() {
-			cout << "\t\t\tKTU Waikiki\n\n";
-		}
-		void start();
-		void GirisMenu();
-		void MusteriGirisMenu();
-		void MusteriKayitMenu();
-		void YoneticiGirisMenu();
+public:
+	void ktuWaikikiText() {
+		cout << "\t\t\tKTU Waikiki\n\n";
+	}
+	void start();
+	void GirisMenu();
+	void MusteriGirisMenu();
+	void MusteriKayitMenu();
+	void YoneticiGirisMenu();
 
-	private:
+private:
 
 };
+
+class Zaman
+{
+public:
+	int getSaat() {
+		return saat;
+	}
+	int getDakika() {
+		return dakika;
+	}
+	void setSaat(int a) {
+		saat = a;
+	}
+	void setDakika(int a) {
+		dakika = a;
+	}
+private:
+	int saat, dakika;
+};
+class Kisi
+{
+public:
+	void setAdSoyad(string a) {
+		ad_soyad = a;
+	}
+	void setTelNo(string a) {
+		telno = a;
+	}
+	
+
+private:
+	string ad_soyad, telno;
+};
+
+class Kiyafet
+{
+public:
+	string getKategori() {
+		return kategori;
+	}
+	string getKiyafetAdi() {
+		return kiyafet_adi;
+	}
+	string getBoyut() {
+		return boyut;
+	}
+	string getRenk() {
+		return renk;
+	}
+	double getFiyat() {
+		return fiyat;
+	}
+
+	void setKategori(string a) {
+		kategori = a;
+	}
+	void setKiyafetAdi(string a) {
+		kiyafet_adi = a;
+	}
+	void setBoyut(string a) {
+		boyut = a;
+	}
+	void setRenk(string a) {
+		renk = a;
+	}
+	void setFiyat(double a) {
+		fiyat = a;
+	}
+
+
+private:
+	string kategori, kiyafet_adi, boyut, renk;
+	double fiyat;
+};
+
+class Siparis : Kiyafet
+{
+public:
+	int getSiparisNo() {
+		return siparis_no;
+	}
+	double getSiparisFiyat() {
+		return siparis_fiyat;
+	}
+	Zaman getSiparisBaslangic() {
+		return siparis_baslangic;
+	}
+	Zaman getSiparisBitis() {
+		return siparis_bitis;
+	}
+
+	void setSiparisNo(int a) {
+		siparis_no = a;
+	}
+	void setSiparisFiyat(double a) {
+		siparis_fiyat = a;
+	}
+	void setSiparisBaslangic(Zaman a) {
+		siparis_baslangic = a;
+	}
+	void setSiparisBitis(Zaman a) {
+		siparis_bitis = a;
+	}
+
+private:
+	int siparis_no;
+	double siparis_fiyat;
+	Zaman siparis_baslangic;
+	Zaman siparis_bitis;
+};
+
+class Kullanici : Kisi
+{
+public:
+	string getKullaniciAdi() {
+		return kullanici_adi;
+	}
+	string getEposta() {
+		return eposta;
+	}
+	string getAdresIlce() {
+		return adres_ilce;
+	}
+	string getSifre() {
+		return sifre;
+	}
+	string getIndirimKodu() {
+		return indirim_kodu;
+	}
+	string getDTarihi() {
+		return dtarihi;
+	}
+
+	void setKullaniciAdi(string a) {
+		kullanici_adi = a;
+	}
+	void setEposta(string a) {
+		eposta = a;
+	}
+	void setAdresIlce(string a) {
+		adres_ilce = a;
+	}
+	void setSifre(string a) {
+		sifre = a;
+	}
+	void setIndirimKodu(string a) {
+		indirim_kodu = a;
+	}
+	void setDTarihi(string a) {
+		dtarihi = a;
+	}
+private:
+	string kullanici_adi, eposta, adres_ilce, sifre, indirim_kodu, dtarihi;
+};
+
+class Kurye : Kisi
+{
+public:
+	Zaman getDagitimBitisler() {
+		return dagitim_bitisler;
+	}
+	int getSiparisNumaralari() {
+		return siparisnumralari;
+	}
+
+	void setDagitimBitisler(Zaman a) {
+		dagitim_bitisler = a;
+	}
+	void setSiparisNumaralari(int a) {
+		siparisnumralari = a;
+	}
+
+private:
+	Zaman dagitim_bitisler;
+	int siparisnumralari;
+};
+
 
 class Yonetici
 {
@@ -43,8 +220,8 @@ public:
     string mail = "-";
 
 private:
-    string sifre;
-    string yoneticiAdi;
+	string sifre;
+	string yoneticiAdi;
 };
 
 
@@ -53,7 +230,7 @@ void MainMenu::start()
 	int selection;
 	ktuWaikikiText();
 	cout << "Modullerden birini secerek isleminize devam edebilirsiniz." << endl;
-	cout << "[1] Sisteme giris.\n" << "[2] Yeni uye kayit.\n"<< "[3] Cikis." << endl;
+	cout << "[1] Sisteme giris.\n" << "[2] Yeni uye kayit.\n" << "[3] Cikis." << endl;
 
 	cin >> selection;
 	system("CLS");
@@ -160,35 +337,35 @@ void MainMenu::YoneticiGirisMenu()
 
 	txt.close();
 
+
 	cout << "Yonetici sifresini giriniz." << endl;
 	cin >> yoneticiSifre;
 
-    txt.open("kullanici.txt",ios::in);
-    while(txt >> y >> s)
-    {
-        if(y == yonetici.getYoneticiAdi() && s == yoneticiSifre)
-        {
-            cout << "Yonetici sistemine hos geldiniz..." << endl;
-            break; // break yerine yonetici paneli acilacak.
-        }
-        else
-        {
-            if(txt.eof() == true)
-            {
-                cout << "Yanlis sifre girdiniz..." << endl;
-                MainMenu();
-            }
-            else
-                continue;
-        }
-    }
+	txt.open("kullanici.txt", ios::in);
+	while (txt >> y >> s)
+	{
+		if (y == yonetici.getYoneticiAdi() && s == yoneticiSifre)
+		{
+			cout << "Yonetici sistemine hos geldiniz..." << endl;
+			break; // break yerine yonetici paneli acilacak.
+		}
+		else
+		{
+			if (txt.eof() == true)
+			{
+				cout << "Yanlis sifre girdiniz..." << endl;
+				MainMenu();
+			}
+			else
+				continue;
+		}
+	}
 
 }
 
 int main()
 {
-	//türkçe karakterleri kullannmak için
-	setlocale(LC_ALL, "Turkish");
+	static Kiyafet k;
 	MainMenu mainMenu;
 	mainMenu.start();
 	return 0;

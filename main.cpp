@@ -105,7 +105,7 @@ private:
 	double fiyat;
 };
 
-class Siparis : public Kiyafet
+class Siparis : Kiyafet
 {
 public:
 	int getSiparisNo() {
@@ -141,7 +141,7 @@ private:
 	Zaman siparis_bitis;
 };
 
-class Kullanici : public Kisi
+class Kullanici : Kisi
 {
 public:
 	string getKullaniciAdi() {
@@ -393,8 +393,6 @@ void MainMenu::YoneticiMenu()
         break;
     case 3:
         sikayet_okuma();
-    default:
-        break;
     }
 
 }
@@ -433,16 +431,6 @@ void MainMenu::kurye_ekleme()
     cin >> kurye_telno;
     txt << kurye_adi << " " << kurye_soyadi << " " << kurye_telno << " " << "0" << " " << "0" << endl;
     cout << "Basariyla Eklendi" << endl;
-    cout << "Devam etemk icin Enter'a basin." << endl;
-    cin >> select;
-    switch(select)
-    {
-		case 1: YoneticiMenu();
-    	default: YoneticiMenu();
-    }
-  // Burayı tekrardan yazmak gerek.
-    // Kişi Sınıfından ad soyad bilgilerini ayrı ayrı almamız gerek. Ayrıca Txt yazdırma işi tamam ama kurye objesine değer gönderirken sıkıntı çıktı.
-    // Kuryelerin gidiş geliş saatleri txt'ye kaydedilecek.Adam ol
 
 }
 
@@ -450,8 +438,21 @@ void MainMenu::sikayet_okuma()
 {
     ifstream txt("sikayet.txt");
     string text;
-    text = txt.get();
-    cout << text;
+    while(txt)
+    {
+        text = txt.get();
+        cout << text;
+    }
+    int select;
+    cout << "\n\nDevam etmek icin 1'e bas." << endl;
+    cin >> select;
+    switch(select)
+    {
+        case 1:
+        YoneticiMenu();
+        default:
+        break;
+    }
 }
 
 int main()

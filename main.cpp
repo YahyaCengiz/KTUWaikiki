@@ -15,11 +15,10 @@ class MainMenu
 		void MusteriKayitMenu();
 		void YoneticiGirisMenu();
 		void YoneticiMenu();
-        // urun_ekleme(); kurye_ekleme(); sikayet_okuma(); kod_tanimlama(); fatura_goruntuleme();
         void urun_ekleme();
         void kurye_ekleme();
         void sikayet_okuma();
-        void kod_tanimlama();
+        void kupon_tanimlama();
         void fatura_goruntuleme();
 
 	private:
@@ -44,11 +43,15 @@ public:
 private:
 	int saat, dakika;
 };
+
 class Kisi
 {
 public:
-	void setAdSoyad(string a) {
-		ad_soyad = a;
+	void setAd(string a) {
+		ad = a;
+	}
+	void setSoyad(string a) {
+        soyad = a;
 	}
 	void setTelNo(string a) {
 		telno = a;
@@ -56,7 +59,7 @@ public:
 
 
 private:
-	string ad_soyad, telno;
+	string ad, soyad, telno;
 };
 
 class Kiyafet
@@ -180,7 +183,7 @@ private:
 	string kullanici_adi, eposta, adres_ilce, sifre, indirim_kodu, dtarihi;
 };
 
-class Kurye : Kisi
+class Kurye : public Kisi
 {
 public:
 	Zaman getDagitimBitisler() {
@@ -196,6 +199,7 @@ public:
 	void setSiparisNumaralari(int a) {
 		siparisnumralari = a;
 	}
+
 
 private:
 	Zaman dagitim_bitisler;
@@ -383,8 +387,11 @@ void MainMenu::YoneticiMenu()
     case 1:
         urun_ekleme();
         break;
-
+    case 2:
+        kurye_ekleme();
+        break;
     }
+
 }
 
 void MainMenu::urun_ekleme()
@@ -408,6 +415,38 @@ void MainMenu::urun_ekleme()
     YoneticiMenu();
 }
 
+void MainMenu::kurye_ekleme()
+{
+    Kurye kurye;
+    string kurye_adi, kurye_soyadi, kurye_telno;
+    int select;
+    fstream txt("kuryeler.txt",ios::app);
+    cout << "Kurye Adi: " << endl;
+    cin >> kurye_adi;
+    cout << "Kurye Soyadi: " << endl;
+    cin >> kurye_soyadi;
+    cout << "Kurye Telefon Numarasi: " << endl;
+    cin >> kurye_telno;
+    txt << kurye_adi << " " << kurye_soyadi << " " << kurye_telno << endl;
+    cout << "Basariyla Eklendi" << endl;
+    cout << "Devam etemk icin Enter'a basin." << endl;
+    cin >> select;
+    switch(select)
+    {
+    default:
+        YoneticiMenu();
+    }
+  // Burayı tekrardan yazmak gerek.
+    // Kişi Sınıfından ad soyad bilgilerini ayrı ayrı almamız gerek. Ayrıca Txt yazdırma işi tamam ama kurye objesine değer gönderirken sıkıntı çıktı.
+    // Kuryelerin gidiş geliş saatleri txt'ye kaydedilecek.Adam ol
+
+}
+
+void MainMenu::sikayet_okuma()
+{
+
+}
+
 int main()
 {
 	//türkçe karakterleri kullannmak için
@@ -416,4 +455,3 @@ int main()
 	mainMenu.start();
 	return 0;
 }
-	

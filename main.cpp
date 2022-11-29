@@ -1,6 +1,7 @@
 #include <iostream>
 #include <locale.h>
 #include <fstream>
+#include <ctime>
 using namespace std;
 
 inline void cls() { system("CLS"); }
@@ -277,6 +278,7 @@ void MainMenu::GirisMenu()
 	cin >> selection;
 	cls();
 
+
 	switch (selection)
 	{
 	case 1:
@@ -302,6 +304,7 @@ void MainMenu::MusteriGirisMenu()
 	cout << "Sifrenizi giriniz: ";
 	cin >> sifre;
 	ifstream txt("kullanici.txt");
+
 
 	while (txt >> k >> s >> ad >> soyad >> dogum >> adres >> tel >> mail >> kod) {
 		if (k == kullaniciAdi && s == sifre) {
@@ -365,7 +368,6 @@ void MainMenu::YoneticiGirisMenu()
 
 	cout << "Yonetici sifresini giriniz." << endl;
 	cin >> yoneticiSifre;
-
 	txt.open("kullanici.txt", ios::in);
 	while (txt >> y >> s >> ad >> soyad >> dogum >> adres >> tel >> mail)
 	{
@@ -456,6 +458,86 @@ void MainMenu::kurye_ekleme()
 void MainMenu::sikayet_okuma()
 {
 
+}
+
+void MainMenu::YoneticiMenu()
+{
+    int selection;
+    system("CLS");
+    cout << "Modullerden birini secerek isleminize devam edebilirsiniz." << endl;
+    cout << "\n";
+	cout << "[1] Urun Ekleme.\n" << "[2] Kurye Ekleme.\n"<<"[3] Sikayet Oneri Okuma.\n"<<"[4] Indirim Kodu Tanimlama.\n"<<"[5] Fatura Goruntuleme.\n"<<"[6] Cikis.\n"<<endl;
+    cin >> selection;
+    switch(selection)
+    {
+    case 1:
+        urun_ekleme();
+        break;
+    case 2:
+        kurye_ekleme();
+        break;
+    case 3:
+        sikayet_okuma();
+    }
+
+}
+
+void MainMenu::urun_ekleme()
+{
+    ofstream urunler("urunler.txt",ios::app);
+    string urun,kategori,fiyat,boyut,renk;
+    cout << "Eklenecek Urun : " << endl;
+    cin >> urun;
+    cout << "Urunun Kategorisi : " << endl;
+    cin >> kategori;
+    cout << "Urunun Fiyati : " << endl;
+    cin >> fiyat;
+    cout << "Urunun Boyutu : " << endl;
+    cin >> boyut;
+    cout << "Urunun Rengi : " << endl;
+    cin >> renk;
+    urunler << urun << " " << kategori << " " << fiyat << " " << boyut << " " << renk << "\n" ;
+
+    urunler.close();
+    cout << "Basariyla Eklendi..." << endl;
+    YoneticiMenu();
+}
+
+void MainMenu::kurye_ekleme()
+{
+    Kurye kurye;
+    string kurye_adi, kurye_soyadi, kurye_telno;
+    fstream txt("kuryeler.txt",ios::app);
+    cout << "Kurye Adi: " << endl;
+    cin >> kurye_adi;
+    cout << "Kurye Soyadi: " << endl;
+    cin >> kurye_soyadi;
+    cout << "Kurye Telefon Numarasi: " << endl;
+    cin >> kurye_telno;
+    txt << kurye_adi << " " << kurye_soyadi << " " << kurye_telno << " " << "0" << " " << "0" << endl;
+    cout << "Basariyla Eklendi" << endl;
+
+}
+
+void MainMenu::sikayet_okuma()
+{
+    ifstream txt("sikayet.txt");
+    string text;
+    while(txt)
+    {
+        text = txt.get();
+        cout << text;
+    }
+    int select;
+    cout << "\n\nDevam etmek icin 1'e bas." << endl;
+    cin >> select;
+    switch(select)
+    {
+        case 1:
+        YoneticiMenu();
+        default:
+        break;
+    }
 }
 
 int main()

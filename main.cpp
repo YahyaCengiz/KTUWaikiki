@@ -4,26 +4,28 @@
 #include <ctime>
 using namespace std;
 
+inline void cls() { system("CLS"); }
 
 class MainMenu
 {
-	public:
-		void ktuWaikikiText() {
-			cout << "\t\t\tKTU Waikiki\n\n";
-		}
-		void start();
-		void GirisMenu();
-		void MusteriGirisMenu();
-		void MusteriKayitMenu();
-		void YoneticiGirisMenu();
-		void YoneticiMenu();
-        void urun_ekleme();
-        void kurye_ekleme();
-        void sikayet_okuma();
-        void kupon_tanimlama();
-        void fatura_goruntuleme();
+public:
+	void ktuWaikikiText() {
+		cout << "\t\t\tKTU Waikiki\n\n";
+	}
+	void start();
+	void GirisMenu();
+	void MusteriGirisMenu();
+	void MusteriKayitMenu();
+	void MusteriMenu();
+	void YoneticiGirisMenu();
+	void YoneticiMenu();
+	void urun_ekleme();
+	void kurye_ekleme();
+	void sikayet_okuma();
+	void kupon_tanimlama();
+	void fatura_goruntuleme();
 
-	private:
+private:
 
 };
 
@@ -53,7 +55,7 @@ public:
 		ad = a;
 	}
 	void setSoyad(string a) {
-        soyad = a;
+		soyad = a;
 	}
 	void setTelNo(string a) {
 		telno = a;
@@ -202,40 +204,33 @@ public:
 		siparisnumralari = a;
 	}
 
-
-private:
-	Zaman dagitim_bitisler;
-	int siparisnumralari;
-};
-
-
 class Yonetici
 {
 public:
-    Yonetici(string s,string y="admin")
-    {
-        yoneticiAdi = y;
-        sifre = s;
-    }
-    string getYoneticiAdi()
-    {
-        return yoneticiAdi;
-    }
-    string getSifre()
-    {
-        return sifre;
-    }
-    string ad="-";
-    string soyad = "-";
-    string dogum = "-";
-    string adres = "-";
-    string tel = "-";
-    string mail = "-";
-    string kod = "-";
+	Yonetici(string s, string y = "admin")
+	{
+		yoneticiAdi = y;
+		sifre = s;
+	}
+	string getYoneticiAdi()
+	{
+		return yoneticiAdi;
+	}
+	string getSifre()
+	{
+		return sifre;
+	}
+	string ad = "-";
+	string soyad = "-";
+	string dogum = "-";
+	string adres = "-";
+	string tel = "-";
+	string mail = "-";
+	string kod = "-";
 
 private:
-    string sifre;
-    string yoneticiAdi;
+	string sifre;
+	string yoneticiAdi;
 };
 
 
@@ -244,10 +239,10 @@ void MainMenu::start()
 	int selection;
 	ktuWaikikiText();
 	cout << "Modullerden birini secerek isleminize devam edebilirsiniz." << endl;
-	cout << "[1] Sisteme giris.\n" << "[2] Yeni uye kayit.\n"<< "[3] Cikis." << endl;
+	cout << "[1] Sisteme giris.\n" << "[2] Yeni uye kayit.\n" << "[3] Cikis." << endl;
 
 	cin >> selection;
-	system("CLS");
+	cls();
 	switch (selection)
 	{
 	case 1:
@@ -274,7 +269,7 @@ void MainMenu::GirisMenu()
 	int selection;
 	cout << "Giris yapmak istediginiz modulu seciniz.\n" << "[1] Musteri girisi.\n" << "[2] Yonetici girisi." << endl;
 	cin >> selection;
-	system("CLS");
+	cls();
 
 	switch (selection)
 	{
@@ -293,8 +288,8 @@ void MainMenu::GirisMenu()
 
 void MainMenu::MusteriGirisMenu()
 {
-	string kullaniciAdi, sifre, k, s, tel, mail, ad, soyad, adres, dogum,kod;
-    int ctr = 0;
+	string kullaniciAdi, sifre, k, s, tel, mail, ad, soyad, adres, dogum, kod;
+	int ctr = 0;
 	ktuWaikikiText();
 	cout << "Kullanici adinizi giriniz: ";
 	cin >> kullaniciAdi;
@@ -302,25 +297,26 @@ void MainMenu::MusteriGirisMenu()
 	cin >> sifre;
 	ifstream txt("kullanici.txt");
 
-	while(txt >> k >> s >> ad >> soyad >> dogum >> adres >> tel >> mail >> kod ){
-        if(k == kullaniciAdi && s == sifre){
-            ctr = 1;
-            break;
-        }
+	while (txt >> k >> s >> ad >> soyad >> dogum >> adres >> tel >> mail >> kod) {
+		if (k == kullaniciAdi && s == sifre) {
+			ctr = 1;
+			break;
+		}
 	}
 	txt.close();
-	if(ctr == 1){
-        cout << "giris yapildi" << endl;
-        cout << "telno: " << tel << " mail: " << mail << endl;
-	}else{
-        cout << "olmadi " << ctr;
+	if (ctr == 1) {
+		cout << "giris yapildi" << endl;
+		cout << "telno: " << tel << " mail: " << mail << endl;
+	}
+	else {
+		cout << "olmadi " << ctr;
 	}
 }
 
 void MainMenu::MusteriKayitMenu()
 {
 	//değerler müşteri classına geçirilecek
-	string ad, soyad, telNo, kullaniciAdi, sifre, mail, adres, dogumTarihi,kod="0";
+	string ad, soyad, telNo, kullaniciAdi, sifre, mail, adres, dogumTarihi, kod = "0";
 
 	ktuWaikikiText();
 	cout << "Adiniz: "; cin >> ad;
@@ -340,20 +336,29 @@ void MainMenu::MusteriKayitMenu()
 	MusteriGirisMenu();
 }
 
+void MainMenu::MusteriMenu()
+{
+	int selection;
+	cout << "Giris yapmak istediginiz modulu seciniz.\n" << "[1] Kategorileri goster.\n" << "[2] Siparis takip." 
+		<< "[3] Sikayet/Oneri." << "[4] Sifre Degistir." << endl;
+	cin >> selection;
+	cls();
+	
+}
+
 
 void MainMenu::YoneticiGirisMenu()
 {
 	ktuWaikikiText();
-    Yonetici yonetici("password");
-	string yoneticiSifre,y,s,ad,soyad,dogum,adres,tel,mail,kod;
-	fstream txt("kullanici.txt",ios::app);
-	txt << yonetici.getYoneticiAdi() << " " << yonetici.getSifre() << " " << yonetici.ad << " " << yonetici.soyad << " " <<yonetici.dogum << " "  << yonetici.adres << " " << yonetici.tel << " " << yonetici.mail << " " << kod << endl;
+	Yonetici yonetici("password");
+	string yoneticiSifre, y, s, ad, soyad, dogum, adres, tel, mail, kod;
+	fstream txt("kullanici.txt", ios::app);
+	txt << yonetici.getYoneticiAdi() << " " << yonetici.getSifre() << " " << yonetici.ad << " " << yonetici.soyad << " " << yonetici.dogum << " " << yonetici.adres << " " << yonetici.tel << " " << yonetici.mail << " " << kod << endl;
 
 	txt.close();
 
 	cout << "Yonetici sifresini giriniz." << endl;
 	cin >> yoneticiSifre;
-
     txt.open("kullanici.txt",ios::in);
     while(txt >> y >> s >> ad >> soyad >> dogum >> adres >> tel >> mail)
     {
@@ -394,29 +399,46 @@ void MainMenu::YoneticiMenu()
     case 3:
         sikayet_okuma();
     }
+	ktuWaikikiText();
+	int selection;
+	cls();
+	cout << "Modullerden birini secerek isleminize devam edebilirsiniz." << endl;
+	cout << "\n";
+	cout << "[1] Urun Ekleme.\n" << "[2] Kurye Ekleme.\n" << "[3] Sikayet Oneri Okuma.\n" << "[4] Indirim Kodu Tanimlama.\n" << "[5] Fatura Goruntuleme.\n" << "[6] Cikis.\n" << endl;
+	cin >> selection;
+	switch (selection)
+	{
+	case 1:
+		urun_ekleme();
+		break;
+	case 2:
+		kurye_ekleme();
+		break;
+	}
 
 }
 
 void MainMenu::urun_ekleme()
 {
-    ofstream urunler("urunler.txt",ios::app);
-    string urun,kategori,fiyat,boyut,renk;
-    cout << "Eklenecek Urun : " << endl;
-    cin >> urun;
-    cout << "Urunun Kategorisi : " << endl;
-    cin >> kategori;
-    cout << "Urunun Fiyati : " << endl;
-    cin >> fiyat;
-    cout << "Urunun Boyutu : " << endl;
-    cin >> boyut;
-    cout << "Urunun Rengi : " << endl;
-    cin >> renk;
-    urunler << urun << " " << kategori << " " << fiyat << " " << boyut << " " << renk << "\n" ;
+	ofstream urunler("urunler.txt", ios::app);
+	string urun, kategori, fiyat, boyut, renk;
+	cout << "Eklenecek Urun : " << endl;
+	cin >> urun;
+	cout << "Urunun Kategorisi : " << endl;
+	cin >> kategori;
+	cout << "Urunun Fiyati : " << endl;
+	cin >> fiyat;
+	cout << "Urunun Boyutu : " << endl;
+	cin >> boyut;
+	cout << "Urunun Rengi : " << endl;
+	cin >> renk;
+	urunler << urun << " " << kategori << " " << fiyat << " " << boyut << " " << renk << "\n";
 
-    urunler.close();
-    cout << "Basariyla Eklendi..." << endl;
-    YoneticiMenu();
+	urunler.close();
+	cout << "Basariyla Eklendi..." << endl;
+	YoneticiMenu();
 }
+
 
 void MainMenu::kurye_ekleme()
 {
@@ -431,6 +453,16 @@ void MainMenu::kurye_ekleme()
     cin >> kurye_telno;
     txt << kurye_adi << " " << kurye_soyadi << " " << kurye_telno << " " << "0" << " " << "0" << endl;
     cout << "Basariyla Eklendi" << endl;
+    cout << "Devam etemk icin Enter'a basin." << endl;
+    cin >> select;
+    switch(select)
+    {
+		  case 1: YoneticiMenu();
+    	default: YoneticiMenu();
+    }
+    // Burayı tekrardan yazmak gerek.
+    // Kişi Sınıfından ad soyad bilgilerini ayrı ayrı almamız gerek. Ayrıca Txt yazdırma işi tamam ama kurye objesine değer gönderirken sıkıntı çıktı.
+    // Kuryelerin gidiş geliş saatleri txt'ye kaydedilecek.Adam ol
 
 }
 
@@ -457,8 +489,6 @@ void MainMenu::sikayet_okuma()
 
 int main()
 {
-	//türkçe karakterleri kullannmak için
-	setlocale(LC_ALL, "Turkish");
 	MainMenu mainMenu;
 	mainMenu.start();
 	return 0;

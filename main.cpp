@@ -103,7 +103,7 @@ private:
 	double fiyat;
 };
 
-class Siparis : Kiyafet
+class Siparis : public Kiyafet
 {
 public:
 	int getSiparisNo() {
@@ -139,7 +139,7 @@ private:
 	Zaman siparis_bitis;
 };
 
-class Kullanici : Kisi
+class Kullanici : public Kisi
 {
 public:
 	string getKullaniciAdi() {
@@ -433,8 +433,8 @@ void MainMenu::kurye_ekleme()
     cin >> select;
     switch(select)
     {
-    default:
-        YoneticiMenu();
+		case 1: YoneticiMenu();
+    	default: YoneticiMenu();
     }
   // Burayı tekrardan yazmak gerek.
     // Kişi Sınıfından ad soyad bilgilerini ayrı ayrı almamız gerek. Ayrıca Txt yazdırma işi tamam ama kurye objesine değer gönderirken sıkıntı çıktı.

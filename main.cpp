@@ -1,7 +1,9 @@
 #include <iostream>
 #include <locale.h>
 #include <fstream>
+#include <ctime>
 using namespace std;
+
 
 class MainMenu
 {
@@ -357,7 +359,6 @@ void MainMenu::YoneticiGirisMenu()
     {
         if(y == yonetici.getYoneticiAdi() && s == yoneticiSifre)
         {
-            cout << "Yonetici sistemine hos geldiniz..." << endl;
             YoneticiMenu();
         }
         else
@@ -390,6 +391,10 @@ void MainMenu::YoneticiMenu()
     case 2:
         kurye_ekleme();
         break;
+    case 3:
+        sikayet_okuma();
+    default:
+        break;
     }
 
 }
@@ -419,7 +424,6 @@ void MainMenu::kurye_ekleme()
 {
     Kurye kurye;
     string kurye_adi, kurye_soyadi, kurye_telno;
-    int select;
     fstream txt("kuryeler.txt",ios::app);
     cout << "Kurye Adi: " << endl;
     cin >> kurye_adi;
@@ -427,24 +431,17 @@ void MainMenu::kurye_ekleme()
     cin >> kurye_soyadi;
     cout << "Kurye Telefon Numarasi: " << endl;
     cin >> kurye_telno;
-    txt << kurye_adi << " " << kurye_soyadi << " " << kurye_telno << endl;
+    txt << kurye_adi << " " << kurye_soyadi << " " << kurye_telno << " " << "0" << " " << "0" << endl;
     cout << "Basariyla Eklendi" << endl;
-    cout << "Devam etemk icin Enter'a basin." << endl;
-    cin >> select;
-    switch(select)
-    {
-    default:
-        YoneticiMenu();
-    }
-  // Burayı tekrardan yazmak gerek.
-    // Kişi Sınıfından ad soyad bilgilerini ayrı ayrı almamız gerek. Ayrıca Txt yazdırma işi tamam ama kurye objesine değer gönderirken sıkıntı çıktı.
-    // Kuryelerin gidiş geliş saatleri txt'ye kaydedilecek.Adam ol
 
 }
 
 void MainMenu::sikayet_okuma()
 {
-
+    ifstream txt("sikayet.txt");
+    string text;
+    text = txt.get();
+    cout << text;
 }
 
 int main()

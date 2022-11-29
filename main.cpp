@@ -1,6 +1,7 @@
 #include <iostream>
 #include <locale.h>
 #include <fstream>
+#include <ctime>
 using namespace std;
 
 inline void cls() { system("CLS"); }
@@ -203,13 +204,6 @@ public:
 		siparisnumralari = a;
 	}
 
-
-private:
-	Zaman dagitim_bitisler;
-	int siparisnumralari;
-};
-
-
 class Yonetici
 {
 public:
@@ -365,26 +359,24 @@ void MainMenu::YoneticiGirisMenu()
 
 	cout << "Yonetici sifresini giriniz." << endl;
 	cin >> yoneticiSifre;
-
-	txt.open("kullanici.txt", ios::in);
-	while (txt >> y >> s >> ad >> soyad >> dogum >> adres >> tel >> mail)
-	{
-		if (y == yonetici.getYoneticiAdi() && s == yoneticiSifre)
-		{
-			cout << "Yonetici sistemine hos geldiniz..." << endl;
-			YoneticiMenu();
-		}
-		else
-		{
-			if (txt.eof() == true)
-			{
-				cout << "Yanlis sifre girdiniz..." << endl;
-				MainMenu();
-			}
-			else
-				continue;
-		}
-	}
+    txt.open("kullanici.txt",ios::in);
+    while(txt >> y >> s >> ad >> soyad >> dogum >> adres >> tel >> mail)
+    {
+        if(y == yonetici.getYoneticiAdi() && s == yoneticiSifre)
+        {
+            YoneticiMenu();
+        }
+        else
+        {
+            if(txt.eof() == true)
+            {
+                cout << "Yanlis sifre girdiniz..." << endl;
+                MainMenu();
+            }
+            else
+                continue;
+        }
+    }
 
 }
 
@@ -430,32 +422,39 @@ void MainMenu::urun_ekleme()
 	YoneticiMenu();
 }
 
+
 void MainMenu::kurye_ekleme()
 {
-	ktuWaikikiText();
-	Kurye kurye;
-	string kurye_adi, kurye_soyadi, kurye_telno;
-	int select;
-	char a;
-	fstream txt("kuryeler.txt", ios::app);
-	cout << "Kurye Adi: " << endl;
-	cin >> kurye_adi;
-	cout << "Kurye Soyadi: " << endl;
-	cin >> kurye_soyadi;
-	cout << "Kurye Telefon Numarasi: " << endl;
-	cin >> kurye_telno;
-	txt << kurye_adi << " " << kurye_soyadi << " " << kurye_telno << endl;
-	cout << "Basariyla Eklendi" << endl;
-	YoneticiMenu();
-	// Burayı tekrardan yazmak gerek.
-	  // Kişi Sınıfından ad soyad bilgilerini ayrı ayrı almamız gerek. Ayrıca Txt yazdırma işi tamam ama kurye objesine değer gönderirken sıkıntı çıktı.
-	  // Kuryelerin gidiş geliş saatleri txt'ye kaydedilecek.Adam ol
+    Kurye kurye;
+    string kurye_adi, kurye_soyadi, kurye_telno;
+    fstream txt("kuryeler.txt",ios::app);
+    cout << "Kurye Adi: " << endl;
+    cin >> kurye_adi;
+    cout << "Kurye Soyadi: " << endl;
+    cin >> kurye_soyadi;
+    cout << "Kurye Telefon Numarasi: " << endl;
+    cin >> kurye_telno;
+    txt << kurye_adi << " " << kurye_soyadi << " " << kurye_telno << " " << "0" << " " << "0" << endl;
+    cout << "Basariyla Eklendi" << endl;
+    cout << "Devam etemk icin Enter'a basin." << endl;
+    cin >> select;
+    switch(select)
+    {
+		  case 1: YoneticiMenu();
+    	default: YoneticiMenu();
+    }
+    // Burayı tekrardan yazmak gerek.
+    // Kişi Sınıfından ad soyad bilgilerini ayrı ayrı almamız gerek. Ayrıca Txt yazdırma işi tamam ama kurye objesine değer gönderirken sıkıntı çıktı.
+    // Kuryelerin gidiş geliş saatleri txt'ye kaydedilecek.Adam ol
 
 }
 
 void MainMenu::sikayet_okuma()
 {
-
+    ifstream txt("sikayet.txt");
+    string text;
+    text = txt.get();
+    cout << text;
 }
 
 int main()

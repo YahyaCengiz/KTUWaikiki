@@ -105,7 +105,7 @@ private:
 	double fiyat;
 };
 
-class Siparis : Kiyafet
+class Siparis : public Kiyafet
 {
 public:
 	int getSiparisNo() {
@@ -141,7 +141,7 @@ private:
 	Zaman siparis_bitis;
 };
 
-class Kullanici : Kisi
+class Kullanici : public Kisi
 {
 public:
 	string getKullaniciAdi() {
@@ -433,6 +433,16 @@ void MainMenu::kurye_ekleme()
     cin >> kurye_telno;
     txt << kurye_adi << " " << kurye_soyadi << " " << kurye_telno << " " << "0" << " " << "0" << endl;
     cout << "Basariyla Eklendi" << endl;
+    cout << "Devam etemk icin Enter'a basin." << endl;
+    cin >> select;
+    switch(select)
+    {
+		case 1: YoneticiMenu();
+    	default: YoneticiMenu();
+    }
+  // Burayı tekrardan yazmak gerek.
+    // Kişi Sınıfından ad soyad bilgilerini ayrı ayrı almamız gerek. Ayrıca Txt yazdırma işi tamam ama kurye objesine değer gönderirken sıkıntı çıktı.
+    // Kuryelerin gidiş geliş saatleri txt'ye kaydedilecek.Adam ol
 
 }
 

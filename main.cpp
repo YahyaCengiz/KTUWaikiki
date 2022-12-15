@@ -751,6 +751,7 @@ void MainMenu::AlisverisiBitir() {
 	for (int i = 0; i < sepetBoyutu; i++)
 		cout << "\t" << sepet[i].getKategori() << " " << sepet[i].getBoyut() << "Beden " << sepet[i].getRenk() << " " << sepet[i].getFiyat() << "TL" << endl;
 	cout << "Toplam tutar: " << SepetFiyati() << "TL" << endl;
+	cout << "Urunlerin gonderilecegi adres: " << kullanici.getAdresIlce() << endl;
 	//fatura txtye kaydedilecek
 	//kurye gonderilecek
 	//siparis takip fonksiyonu yazilacak

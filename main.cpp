@@ -229,16 +229,15 @@ public:
 	void kurye_ekleme();
 	void sikayet_okuma();
 	void kupon_tanimlama();
-	void ElbiseMenu();
-	void TisortMenu();
-	void PantolonMenu();
-	void GomlekMenu();
-	void EtekMenu();
-	void AyakkabiMenu();
+	void UrunSecimMenu(string);
+	void AlisverisiBitir();
 	bool MailVerification(string mail);
 	void fatura_goruntuleme();
 	Kullanici kullanici;
 	Siparis siparis;
+	Kiyafet sepet[20];
+	int sepetBoyutu = 0;
+	int SepetFiyati();
 
 private:
 
@@ -414,19 +413,21 @@ void MainMenu::MusteriKayitMenu()
 
 void MainMenu::MusteriMenu()
 {
-    int selection;
-    cout << "Giris yapmak istediginiz modulu seciniz.\n" << "[1] Kategorileri goster.\n" << "[2] Siparis takip."
-        << "[3] Sikayet/Oneri." << "[4] Sifre Degistir." << endl;
-    cin >> selection;
-    cls();
-    switch (selection)
-    {
-    case 1:
-        KategoriMenu();
-        break;
-    default:
-        break;
-    }
+	cls();
+	ktuWaikikiText();
+	int selection;
+	cout << "Giris yapmak istediginiz modulu seciniz.\n" << "[1] Kategorileri goster.\n" << "[2] Siparis takip.\n"
+		<< "[3] Sikayet/Oneri.\n" << "[4] Sifre Degistir.\n" << endl;
+	cin >> selection;
+	cls();
+	switch (selection)
+	{
+	case 1:
+		KategoriMenu();
+		break;
+	default:
+		break;
+	}
 }
 
 
@@ -523,7 +524,7 @@ void MainMenu::urun_ekleme()
 	ofstream urunler("urunler.txt", ios::app);
 	string kategori, fiyat, boyut, renk;
 	int kategori_secim;
-		//elbise, tisort, pantolon, gomlek, etek, ayakkabi, kategori_secim;
+	//elbise, tisort, pantolon, gomlek, etek, ayakkabi, kategori_secim;
 	cout << "Urunun Kategorisi : \n [1] Elbise \n [2] Tisort \n [3] Pantolon \n [4] Gomlek \n [5] Etek \n [6] Ayakkabi" << endl;
 	cin >> kategori_secim;
 	switch (kategori_secim)
@@ -636,6 +637,7 @@ bool MainMenu::MailVerification(string mail) {
 }
 
 void MainMenu::KategoriMenu() {
+	cls();
 	int selection;
 	cout << "Kategorilerden birini secerek isleminize devam edebilirsiniz." << endl;
 	cout << "\n";
@@ -644,71 +646,120 @@ void MainMenu::KategoriMenu() {
 	switch (selection)
 	{
 	case 1:
-		ElbiseMenu();
+		UrunSecimMenu("Elbise");
 		break;
 	case 2:
-		TisortMenu();
+		UrunSecimMenu("Tisort");
 		break;
 	case 3:
-		PantolonMenu();
+		//PantolonMenu();
 		break;
 	case 4:
-		GomlekMenu();
+		//GomlekMenu();
 		break;
 	case 5:
-		EtekMenu();
+		//EtekMenu();
 		break;
 	case 6:
-		AyakkabiMenu();
+		//AyakkabiMenu();
 		break;
 	case 7:
-		MusteriMenu();
+		//MusteriMenu();
 		break;
 	default:
 		break;
 	}
 }
 
-void MainMenu::ElbiseMenu() {
+void MainMenu::UrunSecimMenu(string kategori) {
+	cls();
 	int selection;
-	string kategori, fiyat, boyut, renk;
-	cout << "Elbiselerden birini secerek isleminize devam edebilirsiniz." << endl;
+	string kategoria, fiyat, boyut, renk;
+	cout << "Bir " << kategori << " secerek isleminize devam edebilirsiniz." << endl;
+	cout << "Su anki sepet tutariniz: " << SepetFiyati() << "TL" << endl;
 	cout << "\n";
 	ifstream uruntxt("urunler.txt");
 	string text;
 	int index = 0;
-	while (uruntxt >> kategori >> fiyat >> boyut >> renk)
+	Kiyafet kiyafet[10] = { Kiyafet() };
+	while (uruntxt >> kategoria >> fiyat >> boyut >> renk)
 	{
-
-		if (kategori == "Elbise") {
+		//cout << "[" << index << "]" << fiyat << "TL " << boyut << "Beden " << renk << endl;
+		if (kategoria == kategori) {
+			kiyafet[index].setKategori(kategoria);
+			kiyafet[index].setFiyat(stoi(fiyat));
+			kiyafet[index].setBoyut(boyut);
+			kiyafet[index].setRenk(renk);
 			index++;
-			cout << "[" << index << "]" << fiyat << "TL " << boyut << "Beden " << renk << endl;
+			cout << "[" << index << "] " << boyut << "Beden " << renk << " " << fiyat << "TL " << endl;
 		}
 	}
-
-
+	uruntxt.close();
+	cout << "\n";
+	cin >> selection;
+	sepet[sepetBoyutu] = kiyafet[selection - 1];
+	sepetBoyutu++;
+	cls();
+	cout << "Urununuz sepete eklendi. Anlik sepet tutari: " << SepetFiyati() << "TL\n" << endl;
+	cout << "Devam etmek icin bir islem seciniz." << endl;
+	cout << "[1] Alisverise devam et.\n[2] Alisverisi bitir.\n" << endl;
+	cin >> selection;
+	switch (selection)
+	{
+	case 1:
+		KategoriMenu();
+		break;
+	case 2:
+		AlisverisiBitir();
+		break;
+	default:
+		cout << "default";
+		break;
+	}
 }
 
+int MainMenu::SepetFiyati() {
+	int toplam = 0;
+	for (int i = 0; i < sepetBoyutu; i++)
+		toplam += sepet[i].getFiyat();
+	return toplam;
+}
 
+void MainMenu::AlisverisiBitir() {
+	cls();
+	int selection;
+	cout << "Satin aldiginiz urunler: " << endl;
+	for (int i = 0; i < sepetBoyutu; i++)
+		cout << "\t" << sepet[i].getKategori() << " " << sepet[i].getBoyut() << "Beden " << sepet[i].getRenk() << " " << sepet[i].getFiyat() << "TL" << endl;
+	cout << "Toplam tutar: " << SepetFiyati() << "TL" << endl;
+	//fatura txtye kaydedilecek
+	//kurye gonderilecek
+	//siparis takip fonksiyonu yazilacak
+	cin >> selection;
+	sepetBoyutu = 0;
+	cls();
+	MusteriMenu();
+	
+}
 
 int main()
 {
-    // Simdiki Zaman Icin Bir Zaman Objesi Olusturduk
-    Zaman zaman;
-    time_t now = time(0);
+	// Simdiki Zaman Icin Bir Zaman Objesi Olusturduk
+	//Zaman zaman;
+	//time_t now = time(0);
 
-    tm *ltm = localtime(&now);
-    zaman.setDakika(ltm->tm_min);
-    zaman.setSaat(ltm->tm_hour);
+	//tm* ltm = localtime(&now);
+	//zaman.setDakika(ltm->tm_min);
+	//zaman.setSaat(ltm->tm_hour);
 
-    // Kurye'nin Gidis-Gelis Zamani
-    Zaman kurye_zaman;
-    kurye_zaman.setSaat(12);
-    kurye_zaman.setDakika(50);
+	//// Kurye'nin Gidis-Gelis Zamani
+	//Zaman kurye_zaman;
+	//kurye_zaman.setSaat(12);
+	//kurye_zaman.setDakika(50);
 
-    // Kurye'nin Donus Zamani
-    Zaman kurye_donus;
-    kurye_donus = zaman+kurye_zaman;
+	//// Kurye'nin Donus Zamani
+	//Zaman kurye_donus;
+	//kurye_donus = zaman + kurye_zaman;
 
 	MainMenu mainMenu;
 	mainMenu.start();

@@ -652,19 +652,19 @@ void MainMenu::KategoriMenu() {
 		UrunSecimMenu("Tisort");
 		break;
 	case 3:
-		//PantolonMenu();
+		UrunSecimMenu("Pantolon");
 		break;
 	case 4:
-		//GomlekMenu();
+		UrunSecimMenu("Gomlek");
 		break;
 	case 5:
-		//EtekMenu();
+		UrunSecimMenu("Etek");
 		break;
 	case 6:
-		//AyakkabiMenu();
+		UrunSecimMenu("Ayakkabi");
 		break;
 	case 7:
-		//MusteriMenu();
+		MusteriMenu();
 		break;
 	default:
 		break;
@@ -695,26 +695,45 @@ void MainMenu::UrunSecimMenu(string kategori) {
 		}
 	}
 	uruntxt.close();
-	cout << "\n";
-	cin >> selection;
-	sepet[sepetBoyutu] = kiyafet[selection - 1];
-	sepetBoyutu++;
-	cls();
-	cout << "Urununuz sepete eklendi. Anlik sepet tutari: " << SepetFiyati() << "TL\n" << endl;
-	cout << "Devam etmek icin bir islem seciniz." << endl;
-	cout << "[1] Alisverise devam et.\n[2] Alisverisi bitir.\n" << endl;
-	cin >> selection;
-	switch (selection)
-	{
-	case 1:
-		KategoriMenu();
-		break;
-	case 2:
-		AlisverisiBitir();
-		break;
-	default:
-		cout << "default";
-		break;
+	if (index == 0) {
+		cout << "Bu kategoride hic urun yok." << endl;
+		cout << "[1] Kategori Secimine Don\n" << "[2] Ana Menuye Don\n" << endl;
+		cin >> selection;
+		switch (selection)
+		{
+		case 1:
+			KategoriMenu();
+			break;
+		case 2:
+			MusteriMenu();
+			break;
+		default:
+			cout << "default";
+			break;
+		}
+	}
+	else {
+		cout << "\n";
+		cin >> selection;
+		sepet[sepetBoyutu] = kiyafet[selection - 1];
+		sepetBoyutu++;
+		cls();
+		cout << "Urununuz sepete eklendi. Anlik sepet tutari: " << SepetFiyati() << "TL\n" << endl;
+		cout << "Devam etmek icin bir islem seciniz." << endl;
+		cout << "[1] Alisverise devam et.\n[2] Alisverisi bitir.\n" << endl;
+		cin >> selection;
+		switch (selection)
+		{
+		case 1:
+			KategoriMenu();
+			break;
+		case 2:
+			AlisverisiBitir();
+			break;
+		default:
+			cout << "default";
+			break;
+		}
 	}
 }
 

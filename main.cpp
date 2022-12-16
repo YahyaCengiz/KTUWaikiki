@@ -123,6 +123,11 @@ public:
 	}
 
 
+	ostream& operator<<(ostream& os) {
+		os << getKategori() << " " << getBoyut() << "Beden " << getRenk() << " " << getFiyat() << "TL" << endl;
+		return os;
+	}
+
 private:
 	string kategori, kiyafet_adi, boyut, renk;
 	double fiyat;
@@ -229,14 +234,17 @@ public:
 	void kurye_ekleme();
 	void sikayet_okuma();
 	void kupon_tanimlama();
+	void SiparisTakipMenu();
 	void UrunSecimMenu(string);
 	void AlisverisiBitir();
 	bool MailVerification(string mail);
 	void fatura_goruntuleme();
 	Kullanici kullanici;
 	Siparis siparis;
-	Kiyafet sepet[20];
 	int sepetBoyutu = 0;
+	Kiyafet sepet[20];
+	//void SepeteEkle(Kiyafet);
+	
 	int SepetFiyati();
 
 private:
@@ -424,6 +432,9 @@ void MainMenu::MusteriMenu()
 	{
 	case 1:
 		KategoriMenu();
+		break;
+	case 2:
+		SiparisTakipMenu();
 		break;
 	default:
 		break;
@@ -744,6 +755,8 @@ int MainMenu::SepetFiyati() {
 	return toplam;
 }
 
+
+
 void MainMenu::AlisverisiBitir() {
 	cls();
 	int selection;
@@ -752,7 +765,12 @@ void MainMenu::AlisverisiBitir() {
 		cout << "\t" << sepet[i].getKategori() << " " << sepet[i].getBoyut() << "Beden " << sepet[i].getRenk() << " " << sepet[i].getFiyat() << "TL" << endl;
 	cout << "Toplam tutar: " << SepetFiyati() << "TL" << endl;
 	cout << "Urunlerin gonderilecegi adres: " << kullanici.getAdresIlce() << endl;
-	//fatura txtye kaydedilecek
+	ofstream faturatxt("fatura.txt", ios::app);
+	string urunler = "";
+	for (int i = 0; i < sepetBoyutu; i++) {
+		urunler += "\\t" + sepet[i].getKategori() + " " + sepet[i].getBoyut() + "Beden " + sepet[i].getRenk() + " " + to_string(sepet[i].getFiyat()) + "TL\\n";
+	}
+	faturatxt << "Alisverisi yapan: " << kullanici.getKullaniciAdi() << "\\nAlinan urunler: \\n" << urunler << "Gonderilecek adres: " << kullanici.getAdresIlce() << " Toplam fiyat: " << SepetFiyati() << "\\n\\n" << endl;
 	//kurye gonderilecek
 	//siparis takip fonksiyonu yazilacak
 	cin >> selection;
@@ -762,9 +780,46 @@ void MainMenu::AlisverisiBitir() {
 	
 }
 
+void MainMenu::SiparisTakipMenu() {
+	cls();
+	int selection;
+	cout << "Siparisleriniz: \n" << endl;
+	ifstream faturatxt("fatura.txt");
+	string text;
+	int index = 0;
+	
+	while (getline(faturatxt, text))
+	{
+		size_t position;
+		while ((position = text.find("\\n")) != std::string::npos) {
+			text.replace(position, 2, "\n");
+		}
+		while ((position = text.find("\\t")) != std::string::npos) {
+			text.replace(position, 2, "\t");
+		}
+		cout << text << endl;
+		index++;
+	}
+	faturatxt.close();
+	cout << "\n";
+	cout << "Bir modul secerek isleminize devam edebilirsiniz.\n[1] Ana Menuye Don\n" << endl;
+	cin >> selection;
+	switch (selection)
+	{
+	case 1:
+		MusteriMenu();
+		break;
+	default:
+		break;
+	}
+}
+
+
+
+
 int main()
 {
-	// Simdiki Zaman Icin Bir Zaman Objesi Olusturduk
+	////Simdiki Zaman Icin Bir Zaman Objesi Olusturduk
 	//Zaman zaman;
 	//time_t now = time(0);
 

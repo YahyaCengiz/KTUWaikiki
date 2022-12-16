@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <iostream>
 #include <locale.h>
 #include <fstream>
@@ -601,39 +603,32 @@ void MainMenu::sikayet_okuma()
 
 void MainMenu::kupon_tanimlama()
 {
-	cls();
-	ktuWaikikiText();
+	cls(); ktuWaikikiText();
 	cout << "Kupon tanimlanacak kullanici adini giriniz: ";
-	string hangikullanici;
-	cin >> hangikullanici;
+	string hangikullanici; cin >> hangikullanici;
 	cout << "Kupon kodunu giriniz: ";
-	string yenikod;
-	cin >> yenikod;
+	string yenikod; cin >> yenikod;
 
 	string k, s, ad, soyad, dogum, adres, tel, mail, kod;
-	ifstream txt("./kullanici.txt");
-	ofstream temp("./kullanicitemp.txt");
-	string text, delim = " ";
-	while (txt >> k >> s >> ad >> soyad >> dogum >> adres >> tel >> mail >> kod) {
-		if (k == hangikullanici) {
-			temp << k << " " << s << " " << ad << " " << soyad << " " << dogum << " " << adres << " " << tel << " " << mail << " " << yenikod << endl;
+	fstream txt("./kullanici.txt");
+	string text;
+	size_t pos = 0;
+	while (txt >> k >> s >> ad >> soyad >> dogum >> adres >> tel >> mail >> kod)
+	{
+		//kod uzunlugu belirli olmali
+		if (k == hangikullanici)
+		{
+			txt.seekp(pos);
+			txt << k << " " << s << " " << ad << " " << soyad << " " << dogum << " " << adres << " " << tel << " " << mail << " " << yenikod << endl;
+			pos += k.length() + s.length() + ad.length() + soyad.length() + dogum.length() + adres.length() + tel.length() + mail.length() + yenikod.length() + 8;
 		}
-		else {
-			temp << k << " " << s << " " << ad << " " << soyad << " " << dogum << " " << adres << " " << tel << " " << mail << " " << kod << endl;
+		else
+		{
+			pos += k.length() + s.length() + ad.length() + soyad.length() + dogum.length() + adres.length() + tel.length() + mail.length() + kod.length() + 8;
 		}
 	}
+	
 	txt.close();
-	temp.close();
-
-	int status = remove("kullanici.txt");
-	if (status == 0) cout << "Deleted";
-	else cout << "Unable to delete the file";
-
-	cout << endl;
-
-	int status2 = rename("kullanicitemp.txt", "kullanici.txt");
-	if (status2 == 0) cout << "Renamed";
-	else cout << "Unable to rename the file";
 }
 
 bool MainMenu::MailVerification(string mail) {
@@ -822,7 +817,6 @@ int main()
 	////Simdiki Zaman Icin Bir Zaman Objesi Olusturduk
 	//Zaman zaman;
 	//time_t now = time(0);
-
 	//tm* ltm = localtime(&now);
 	//zaman.setDakika(ltm->tm_min);
 	//zaman.setSaat(ltm->tm_hour);

@@ -41,6 +41,9 @@ public:
 		return kurye_donus;
 
 	}
+
+	
+	
 	time_t getSaat() {
 		return saat;
 	}
@@ -60,6 +63,12 @@ public:
 private:
 	int saat, dakika;
 };
+
+ostream& operator << (ostream& out, Zaman zaman)
+{
+	out << zaman.getSaat() << ":" << zaman.getDakika();
+	return out;
+}
 
 
 class Kisi
@@ -221,49 +230,6 @@ private:
 	string kullanici_adi, eposta, adres_ilce, sifre, indirim_kodu, dtarihi;
 };
 
-
-class MainMenu
-{
-public:
-	void ktuWaikikiText() {
-		cout << "\t\t\tKTU Waikiki\n\n";
-	}
-	void start();
-	void GirisMenu();
-	void MusteriGirisMenu();
-	void MusteriKayitMenu();
-	void KategoriMenu();
-	void MusteriMenu();
-	void SifreDegistirMenu();
-	void YoneticiGirisMenu();
-	void YoneticiMenu();
-	void urun_ekleme();
-	void kurye_ekleme();
-	void sikayet_okuma();
-	void kupon_tanimlama();
-	void SiparisTakipMenu();
-	void UrunSecimMenu(string);
-	void AlisverisiBitir();
-	bool MailVerification(string mail);
-	void fatura_goruntuleme();
-	Kullanici kullanici;
-	void kurye_gonderme(Kullanici kullanici);
-	Siparis siparis;
-	int sepetBoyutu = 0;
-	Kiyafet sepet[20];
-	//void SepeteEkle(Kiyafet);
-
-	Zaman simdi;
-	time_t now = time(0);
-	tm* ltm = localtime(&now);
-
-	int SepetFiyati();
-
-private:
-
-};
-
-
 class Kurye : public Kisi
 {
 public:
@@ -286,6 +252,48 @@ private:
 	Zaman dagitim_bitisler;
 	int siparisnumralari;
 };
+
+class MainMenu
+{
+public:
+	void ktuWaikikiText() {
+		cout << "\t\t\tKTU Waikiki\n\n";
+	}
+	void start();
+	void GirisMenu();
+	void MusteriGirisMenu();
+	void MusteriKayitMenu();
+	void KategoriMenu();
+	void MusteriMenu();
+	//void SifreDegistirMenu();
+	void YoneticiGirisMenu();
+	void YoneticiMenu();
+	void urun_ekleme();
+	void kurye_ekleme();
+	void sikayet_okuma();
+	void kupon_tanimlama();
+	void SiparisTakipMenu();
+	void UrunSecimMenu(string);
+	void AlisverisiBitir();
+	bool MailVerification(string mail);
+	void fatura_goruntuleme();
+	Kullanici kullanici;
+	Kurye kurye_gonderme();
+	Siparis siparis;
+	int sepetBoyutu = 0;
+	Kiyafet sepet[20];
+	//void SepeteEkle(Kiyafet);
+
+	Zaman simdi;
+	time_t now = time(0);
+	tm* ltm = localtime(&now);
+
+	int SepetFiyati();
+
+private:
+
+};
+
 
 
 class Yonetici
@@ -454,7 +462,7 @@ void MainMenu::MusteriMenu()
 		SiparisTakipMenu();
 		break;
 	case 4:
-		SifreDegistirMenu();
+		//SifreDegistirMenu();
 		break;
 	case 5:
 		start();
@@ -785,12 +793,15 @@ void MainMenu::AlisverisiBitir() {
 	cout << "Urunlerin gonderilecegi adres: " << kullanici.getAdresIlce() << endl;
 	ofstream faturatxt("fatura.txt", ios::app);
 	string urunler = "";
+	auto kurye = kurye_gonderme();
+	auto zaman = kurye.getDagitimBitisler();
 	for (int i = 0; i < sepetBoyutu; i++) {
 		urunler += "\\t" + sepet[i].getKategori() + " " + sepet[i].getBoyut() + "Beden " + sepet[i].getRenk() + " " + to_string(sepet[i].getFiyat()) + "TL\\n";
 	}
-	faturatxt << "Alisverisi yapan: " << kullanici.getKullaniciAdi() << "\\nAlinan urunler: \\n" << urunler << "Gonderilecek adres: " << kullanici.getAdresIlce() << " Toplam fiyat: " << SepetFiyati() << "\\n\\n" << endl;
+	
+	faturatxt << "Alisverisi yapan: " << kullanici.getKullaniciAdi() << "\\nAlinan urunler: \\n" << urunler << "Gonderilecek adres: " << kullanici.getAdresIlce() << " Toplam fiyat: " << SepetFiyati() << "\\n" << "Gönderilen kurye: \\n\\t " << kurye.getAd() << " " << kurye.getSoyad() << "\\n\\t" << "Telefon numarasi: " << kurye.getTelNo() << "\\n\\t" << "Teslim saati: " << zaman << "\\n\\n" << endl;
 	//kurye gonderilecek
-	kurye_gonderme(kullanici);
+	
 	//siparis takip fonksiyonu yazilacak
 	cin >> selection;
 	sepetBoyutu = 0;
@@ -843,10 +854,11 @@ void MainMenu::SiparisTakipMenu() {
 
 
 
-void MainMenu::kurye_gonderme(Kullanici kullanici)
+Kurye MainMenu::kurye_gonderme()
 {
 	string adres;
 	Zaman adres_zaman;
+	Kurye kurye; //bu kurye return edilecek
 
 	simdi.setDakika(ltm->tm_min);
 	simdi.setSaat(ltm->tm_hour);
@@ -855,7 +867,7 @@ void MainMenu::kurye_gonderme(Kullanici kullanici)
 	ifstream kurye_txt("kuryeler.txt");
 	adres = kullanici.getAdresIlce();
 
-	if (adres == "1")
+	if (adres == "1" || adres == "Ortahisar")
 	{
 		adres_zaman.setSaat(0);
 		adres_zaman.setDakika(35);
@@ -867,8 +879,14 @@ void MainMenu::kurye_gonderme(Kullanici kullanici)
 		{
 			Zaman kurye_donus_zamani;
 			kurye_donus_zamani = simdi + adres_zaman;
+			kurye.setAd(kurye_ad);
+			kurye.setSoyad(kurye_soyad);
+			kurye.setTelNo(kurye_tel);
+			kurye.setDagitimBitisler(kurye_donus_zamani);
+
 			cout << "Kurye yola cikti, tahmini donus saati : " << endl;
 			cout << kurye_donus_zamani.getSaat() << ":" << kurye_donus_zamani.getDakika() << endl;
+			return kurye;
 			break;
 		}
 		else

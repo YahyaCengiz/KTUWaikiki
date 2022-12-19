@@ -514,7 +514,7 @@ void MainMenu::kurye_ekleme()
 	cin >> kurye_soyadi;
 	cout << "Kurye Telefon Numarasi: " << endl;
 	cin >> kurye_telno;
-	txt << kurye_adi << " " << kurye_soyadi << " " << kurye_telno << " " << "0" << endl;
+	txt << kurye_adi << " " << kurye_soyadi << " " << kurye_telno << " " << "0"  << " " << "0" << endl;
 	cout << "Basariyla Eklendi" << endl;
 	YoneticiMenu();
 	// Burayı tekrardan yazmak gerek.
@@ -786,7 +786,7 @@ void MainMenu::AlisverisiBitir() {
 	}
 	faturatxt << "Alisverisi yapan: " << kullanici.getKullaniciAdi() << "\\nAlinan urunler: \\n" << urunler << "Gonderilecek adres: " << kullanici.getAdresIlce() << " Toplam fiyat: " << SepetFiyati() << "\\n\\n" << endl;
 	//kurye gonderilecek
-	kurye_gonderme(this->kullanici);
+	kurye_gonderme(kullanici);
 	//siparis takip fonksiyonu yazilacak
 	cin >> selection;
 	sepetBoyutu = 0;
@@ -840,8 +840,8 @@ void MainMenu::kurye_gonderme(Kullanici kullanici)
     simdi.setDakika(ltm->tm_min);
 	simdi.setSaat(ltm->tm_hour);
 
-    string kurye_ad, kurye_soyad, kurye_tel, kurye_donus;
-    fstream kurye_txt("kuryeler.txt",ios::app);
+    string kurye_ad, kurye_soyad, kurye_tel, kurye_donus_saati, kurye_donus_dakikasi;
+    ifstream kurye_txt("kuryeler.txt");
     adres = kullanici.getAdresIlce();
 
     if(adres == "1")
@@ -850,9 +850,9 @@ void MainMenu::kurye_gonderme(Kullanici kullanici)
         adres_zaman.setDakika(35);
     }
 
-    while(kurye_txt >> kurye_ad >> kurye_soyad >> kurye_tel >> kurye_donus)
+    while(kurye_txt >> kurye_ad >> kurye_soyad >> kurye_tel >> kurye_donus_saati >> kurye_donus_dakikasi)
     {
-        if(kurye_donus == "0")
+        if(kurye_donus_saati == "0" && kurye_donus_dakikasi == "0")
             {
                 Zaman kurye_donus_zamani;
                 kurye_donus_zamani = simdi + adres_zaman;

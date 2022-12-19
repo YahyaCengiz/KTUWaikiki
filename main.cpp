@@ -62,7 +62,6 @@ private:
 };
 
 
-
 class Kisi
 {
 public:
@@ -88,6 +87,7 @@ public:
 private:
 	string ad, soyad, telno;
 };
+
 
 class Kiyafet
 {
@@ -135,6 +135,7 @@ private:
 	double fiyat;
 };
 
+
 class Siparis : public Kiyafet
 {
 public:
@@ -175,6 +176,7 @@ private:
 	Zaman siparis_bitis;
 };
 
+
 class Kullanici : public Kisi
 {
 public:
@@ -185,7 +187,22 @@ public:
 		return eposta;
 	}
 	string getAdresIlce() {
-		return adres_ilce;
+		if(adres_ilce == "1")
+            return "Ortahisar";
+        else if(adres_ilce == "2")
+          return "Akçaabat";
+        else if(adres_ilce == "3")
+            return "Vakfıkebir";
+        else if(adres_ilce == "4")
+            return "Beşikdüzü";
+        else if(adres_ilce == "5")
+            return "Yomra";
+        else if(adres_ilce == "6")
+            return "Arsin";
+        else if(adres_ilce == "7")
+            return "Araklı";
+        else
+            return "Hata";
 	}
 	string getSifre() {
 		return sifre;
@@ -218,6 +235,8 @@ public:
 private:
 	string kullanici_adi, eposta, adres_ilce, sifre, indirim_kodu, dtarihi;
 };
+
+
 class MainMenu
 {
 public:
@@ -246,12 +265,13 @@ public:
 	int sepetBoyutu = 0;
 	Kiyafet sepet[20];
 	//void SepeteEkle(Kiyafet);
-	
+
 	int SepetFiyati();
 
 private:
 
 };
+
 
 class Kurye : public Kisi
 {
@@ -336,6 +356,7 @@ void MainMenu::start()
 
 }
 
+
 void MainMenu::GirisMenu()
 {
 	ktuWaikikiText();
@@ -359,6 +380,7 @@ void MainMenu::GirisMenu()
 		break;
 	}
 }
+
 
 void MainMenu::MusteriGirisMenu()
 {
@@ -395,6 +417,7 @@ void MainMenu::MusteriGirisMenu()
 	}
 }
 
+
 void MainMenu::MusteriKayitMenu()
 {
 	//değerler müşteri classına geçirilecek
@@ -421,13 +444,14 @@ void MainMenu::MusteriKayitMenu()
 	MusteriGirisMenu();
 }
 
+
 void MainMenu::MusteriMenu()
 {
 	cls();
 	ktuWaikikiText();
 	int selection;
 	cout << "Giris yapmak istediginiz modulu seciniz.\n" << "[1] Kategorileri goster.\n" << "[2] Siparis takip.\n"
-		<< "[3] Sikayet/Oneri.\n" << "[4] Sifre Degistir.\n" << endl;
+		<< "[3] Sikayet/Oneri.\n" << "[4] Sifre Degistir.\n" << "[5] Cikis \n" << endl;
 	cin >> selection;
 	cls();
 	switch (selection)
@@ -438,6 +462,8 @@ void MainMenu::MusteriMenu()
 	case 2:
 		SiparisTakipMenu();
 		break;
+    case 5:
+        start();
 	default:
 		break;
 	}
@@ -532,6 +558,7 @@ void MainMenu::YoneticiMenu()
 
 }
 
+
 void MainMenu::urun_ekleme()
 {
 	ofstream urunler("urunler.txt", ios::app);
@@ -600,7 +627,6 @@ void MainMenu::sikayet_okuma()
 }
 
 
-
 void MainMenu::kupon_tanimlama()
 {
 	cls(); ktuWaikikiText();
@@ -627,9 +653,10 @@ void MainMenu::kupon_tanimlama()
 			pos += k.length() + s.length() + ad.length() + soyad.length() + dogum.length() + adres.length() + tel.length() + mail.length() + kod.length() + 8;
 		}
 	}
-	
+
 	txt.close();
 }
+
 
 bool MainMenu::MailVerification(string mail) {
 	if (mail.find("@") != string::npos && mail.find(".com") != string::npos)
@@ -641,6 +668,7 @@ bool MainMenu::MailVerification(string mail) {
 		return false;
 	}
 }
+
 
 void MainMenu::KategoriMenu() {
 	cls();
@@ -676,6 +704,7 @@ void MainMenu::KategoriMenu() {
 		break;
 	}
 }
+
 
 void MainMenu::UrunSecimMenu(string kategori) {
 	cls();
@@ -743,13 +772,13 @@ void MainMenu::UrunSecimMenu(string kategori) {
 	}
 }
 
+
 int MainMenu::SepetFiyati() {
 	int toplam = 0;
 	for (int i = 0; i < sepetBoyutu; i++)
 		toplam += sepet[i].getFiyat();
 	return toplam;
 }
-
 
 
 void MainMenu::AlisverisiBitir() {
@@ -772,8 +801,9 @@ void MainMenu::AlisverisiBitir() {
 	sepetBoyutu = 0;
 	cls();
 	MusteriMenu();
-	
+
 }
+
 
 void MainMenu::SiparisTakipMenu() {
 	cls();
@@ -782,7 +812,7 @@ void MainMenu::SiparisTakipMenu() {
 	ifstream faturatxt("fatura.txt");
 	string text;
 	int index = 0;
-	
+
 	while (getline(faturatxt, text))
 	{
 		size_t position;

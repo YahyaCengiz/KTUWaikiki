@@ -234,6 +234,7 @@ public:
 	void MusteriKayitMenu();
 	void KategoriMenu();
 	void MusteriMenu();
+	void SifreDegistirMenu();
 	void YoneticiGirisMenu();
 	void YoneticiMenu();
 	void urun_ekleme();
@@ -452,8 +453,11 @@ void MainMenu::MusteriMenu()
 	case 2:
 		SiparisTakipMenu();
 		break;
-    case 5:
-        start();
+	case 4:
+		SifreDegistirMenu();
+		break;
+	case 5:
+		start();
 	default:
 		break;
 	}
@@ -514,7 +518,7 @@ void MainMenu::kurye_ekleme()
 	cin >> kurye_soyadi;
 	cout << "Kurye Telefon Numarasi: " << endl;
 	cin >> kurye_telno;
-	txt << kurye_adi << " " << kurye_soyadi << " " << kurye_telno << " " << "0"  << " " << "0" << endl;
+	txt << kurye_adi << " " << kurye_soyadi << " " << kurye_telno << " " << "0" << " " << "0" << endl;
 	cout << "Basariyla Eklendi" << endl;
 	YoneticiMenu();
 	// Burayı tekrardan yazmak gerek.
@@ -806,15 +810,20 @@ void MainMenu::SiparisTakipMenu() {
 
 	while (getline(faturatxt, text))
 	{
-		size_t position;
-		while ((position = text.find("\\n")) != std::string::npos) {
-			text.replace(position, 2, "\n");
+		auto pos = text.find("Alisverisi yapan: " + kullanici.getKullaniciAdi() + "\\");
+		//cout << pos << endl;
+		if (pos == 0) {
+			cout << "[" << index << "]" << endl;
+			size_t position;
+			while ((position = text.find("\\n")) != std::string::npos) {
+				text.replace(position, 2, "\n");
+			}
+			while ((position = text.find("\\t")) != std::string::npos) {
+				text.replace(position, 2, "\t");
+			}
+			cout << text << endl;
+			index++;
 		}
-		while ((position = text.find("\\t")) != std::string::npos) {
-			text.replace(position, 2, "\t");
-		}
-		cout << text << endl;
-		index++;
 	}
 	faturatxt.close();
 	cout << "\n";
@@ -832,39 +841,41 @@ void MainMenu::SiparisTakipMenu() {
 }
 
 
+
+
 void MainMenu::kurye_gonderme(Kullanici kullanici)
 {
-    string adres;
-    Zaman adres_zaman;
+	string adres;
+	Zaman adres_zaman;
 
-    simdi.setDakika(ltm->tm_min);
+	simdi.setDakika(ltm->tm_min);
 	simdi.setSaat(ltm->tm_hour);
 
-    string kurye_ad, kurye_soyad, kurye_tel, kurye_donus_saati, kurye_donus_dakikasi;
-    ifstream kurye_txt("kuryeler.txt");
-    adres = kullanici.getAdresIlce();
+	string kurye_ad, kurye_soyad, kurye_tel, kurye_donus_saati, kurye_donus_dakikasi;
+	ifstream kurye_txt("kuryeler.txt");
+	adres = kullanici.getAdresIlce();
 
-    if(adres == "1")
-    {
-        adres_zaman.setSaat(0);
-        adres_zaman.setDakika(35);
-    }
+	if (adres == "1")
+	{
+		adres_zaman.setSaat(0);
+		adres_zaman.setDakika(35);
+	}
 
-    while(kurye_txt >> kurye_ad >> kurye_soyad >> kurye_tel >> kurye_donus_saati >> kurye_donus_dakikasi)
-    {
-        if(kurye_donus_saati == "0" && kurye_donus_dakikasi == "0")
-            {
-                Zaman kurye_donus_zamani;
-                kurye_donus_zamani = simdi + adres_zaman;
-                cout << "Kurye yola cikti, tahmini donus saati : " << endl;
-                cout << kurye_donus_zamani.getSaat() << ":" << kurye_donus_zamani.getDakika() << endl;
-                break;
-            }
-        else
-            {
-                cout << "Bosta Kurye Yok." << endl;
-            }
-    }
+	while (kurye_txt >> kurye_ad >> kurye_soyad >> kurye_tel >> kurye_donus_saati >> kurye_donus_dakikasi)
+	{
+		if (kurye_donus_saati == "0" && kurye_donus_dakikasi == "0")
+		{
+			Zaman kurye_donus_zamani;
+			kurye_donus_zamani = simdi + adres_zaman;
+			cout << "Kurye yola cikti, tahmini donus saati : " << endl;
+			cout << kurye_donus_zamani.getSaat() << ":" << kurye_donus_zamani.getDakika() << endl;
+			break;
+		}
+		else
+		{
+			cout << "Bosta Kurye Yok." << endl;
+		}
+	}
 
 }
 

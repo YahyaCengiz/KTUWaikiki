@@ -187,22 +187,7 @@ public:
 		return eposta;
 	}
 	string getAdresIlce() {
-		if(adres_ilce == "1")
-            return "Ortahisar";
-        else if(adres_ilce == "2")
-          return "Akçaabat";
-        else if(adres_ilce == "3")
-            return "Vakfıkebir";
-        else if(adres_ilce == "4")
-            return "Beşikdüzü";
-        else if(adres_ilce == "5")
-            return "Yomra";
-        else if(adres_ilce == "6")
-            return "Arsin";
-        else if(adres_ilce == "7")
-            return "Araklı";
-        else
-            return "Hata";
+		return adres_ilce;
 	}
 	string getSifre() {
 		return sifre;
@@ -261,10 +246,15 @@ public:
 	bool MailVerification(string mail);
 	void fatura_goruntuleme();
 	Kullanici kullanici;
+	void kurye_gonderme(Kullanici kullanici);
 	Siparis siparis;
 	int sepetBoyutu = 0;
 	Kiyafet sepet[20];
 	//void SepeteEkle(Kiyafet);
+
+	Zaman simdi;
+	time_t now = time(0);
+	tm* ltm = localtime(&now);
 
 	int SepetFiyati();
 
@@ -524,7 +514,7 @@ void MainMenu::kurye_ekleme()
 	cin >> kurye_soyadi;
 	cout << "Kurye Telefon Numarasi: " << endl;
 	cin >> kurye_telno;
-	txt << kurye_adi << " " << kurye_soyadi << " " << kurye_telno << endl;
+	txt << kurye_adi << " " << kurye_soyadi << " " << kurye_telno << " " << "0" << endl;
 	cout << "Basariyla Eklendi" << endl;
 	YoneticiMenu();
 	// Burayı tekrardan yazmak gerek.
@@ -796,6 +786,7 @@ void MainMenu::AlisverisiBitir() {
 	}
 	faturatxt << "Alisverisi yapan: " << kullanici.getKullaniciAdi() << "\\nAlinan urunler: \\n" << urunler << "Gonderilecek adres: " << kullanici.getAdresIlce() << " Toplam fiyat: " << SepetFiyati() << "\\n\\n" << endl;
 	//kurye gonderilecek
+	kurye_gonderme(this->kullanici);
 	//siparis takip fonksiyonu yazilacak
 	cin >> selection;
 	sepetBoyutu = 0;
@@ -837,9 +828,45 @@ void MainMenu::SiparisTakipMenu() {
 	default:
 		break;
 	}
+
 }
 
 
+void MainMenu::kurye_gonderme(Kullanici kullanici)
+{
+    string adres;
+    Zaman adres_zaman;
+
+    simdi.setDakika(ltm->tm_min);
+	simdi.setSaat(ltm->tm_hour);
+
+    string kurye_ad, kurye_soyad, kurye_tel, kurye_donus;
+    fstream kurye_txt("kuryeler.txt",ios::app);
+    adres = kullanici.getAdresIlce();
+
+    if(adres == "1")
+    {
+        adres_zaman.setSaat(0);
+        adres_zaman.setDakika(35);
+    }
+
+    while(kurye_txt >> kurye_ad >> kurye_soyad >> kurye_tel >> kurye_donus)
+    {
+        if(kurye_donus == "0")
+            {
+                Zaman kurye_donus_zamani;
+                kurye_donus_zamani = simdi + adres_zaman;
+                cout << "Kurye yola cikti, tahmini donus saati : " << endl;
+                cout << kurye_donus_zamani.getSaat() << ":" << kurye_donus_zamani.getDakika() << endl;
+                break;
+            }
+        else
+            {
+                cout << "Bosta Kurye Yok." << endl;
+            }
+    }
+
+}
 
 
 int main()

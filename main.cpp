@@ -42,8 +42,8 @@ public:
 
 	}
 
-	
-	
+
+
 	time_t getSaat() {
 		return saat;
 	}
@@ -798,10 +798,10 @@ void MainMenu::AlisverisiBitir() {
 	for (int i = 0; i < sepetBoyutu; i++) {
 		urunler += "\\t" + sepet[i].getKategori() + " " + sepet[i].getBoyut() + "Beden " + sepet[i].getRenk() + " " + to_string(sepet[i].getFiyat()) + "TL\\n";
 	}
-	
+
 	faturatxt << "Alisverisi yapan: " << kullanici.getKullaniciAdi() << "\\nAlinan urunler: \\n" << urunler << "Gonderilecek adres: " << kullanici.getAdresIlce() << " Toplam fiyat: " << SepetFiyati() << "\\n" << "Gönderilen kurye: \\n\\t " << kurye.getAd() << " " << kurye.getSoyad() << "\\n\\t" << "Telefon numarasi: " << kurye.getTelNo() << "\\n\\t" << "Teslim saati: " << zaman << "\\n\\n" << endl;
 	//kurye gonderilecek
-	
+
 	//siparis takip fonksiyonu yazilacak
 	cin >> selection;
 	sepetBoyutu = 0;
@@ -860,6 +860,8 @@ Kurye MainMenu::kurye_gonderme()
 	Zaman adres_zaman;
 	Kurye kurye; //bu kurye return edilecek
 
+	int position = 0;
+
 	simdi.setDakika(ltm->tm_min);
 	simdi.setSaat(ltm->tm_hour);
 
@@ -872,6 +874,38 @@ Kurye MainMenu::kurye_gonderme()
 		adres_zaman.setSaat(0);
 		adres_zaman.setDakika(35);
 	}
+	else if (adres == "2" || adres == "Akçaabat")
+	{
+	    adres_zaman.setSaat(0);
+	    adres_zaman.setDakika(50);
+	}
+	else if (adres == "3" || adres == "Vakfıkebir")
+    {
+        adres_zaman.setSaat(1);
+        adres_zaman.setDakika(30);
+    }
+    else if (adres == "4" || adres == "Beşikdüzü")
+    {
+        adres_zaman.setSaat(1);
+        adres_zaman.setDakika(50);
+    }
+    else if (adres == "5" || adres == "Yomra")
+    {
+        adres_zaman.setSaat(0);
+        adres_zaman.setDakika(55);
+    }
+    else if (adres == "6" || adres == "Arsin")
+    {
+        adres_zaman.setSaat(1);
+        adres_zaman.setDakika(20);
+    }
+    else if (adres == "7" || adres == "Araklı")
+    {
+        adres_zaman.setSaat(1);
+        adres_zaman.setDakika(40);
+    }
+    else
+        cout << "Hata" << endl;
 
 	while (kurye_txt >> kurye_ad >> kurye_soyad >> kurye_tel >> kurye_donus_saati >> kurye_donus_dakikasi)
 	{
@@ -884,6 +918,12 @@ Kurye MainMenu::kurye_gonderme()
 			kurye.setTelNo(kurye_tel);
 			kurye.setDagitimBitisler(kurye_donus_zamani);
 
+			kurye_txt.close();
+			fstream kurye_txt("kuryeler.txt",ios::app);
+            kurye_txt.seekp(position);
+            cout << position << endl;
+            kurye_txt << kurye_ad << " " << kurye_soyad << " " << kurye_tel << " " << kurye_donus_zamani.getSaat() << " " << kurye_donus_zamani.getDakika() << endl;
+
 			cout << "Kurye yola cikti, tahmini donus saati : " << endl;
 			cout << kurye_donus_zamani.getSaat() << ":" << kurye_donus_zamani.getDakika() << endl;
 			return kurye;
@@ -891,7 +931,7 @@ Kurye MainMenu::kurye_gonderme()
 		}
 		else
 		{
-			cout << "Bosta Kurye Yok." << endl;
+			position += kurye_ad.length() + kurye_soyad.length() + kurye_tel.length() + kurye_donus_saati.length() + kurye_donus_dakikasi.length() + 4;
 		}
 	}
 

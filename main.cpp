@@ -41,10 +41,7 @@ public:
 		return kurye_donus;
 
 	}
-<<<<<<< Updated upstream
-=======
 	
->>>>>>> Stashed changes
 	time_t getSaat() {
 		return saat;
 	}
@@ -65,8 +62,6 @@ private:
 	int saat, dakika;
 };
 
-<<<<<<< Updated upstream
-=======
 ostream& operator << (ostream& out, Zaman zaman)
 {
 	out << zaman.getSaat() << ":";
@@ -76,7 +71,6 @@ ostream& operator << (ostream& out, Zaman zaman)
 		out << zaman.getDakika();
 	return out;
 }
->>>>>>> Stashed changes
 
 
 
@@ -105,6 +99,7 @@ public:
 private:
 	string ad, soyad, telno;
 };
+
 
 class Kiyafet
 {
@@ -152,6 +147,7 @@ private:
 	double fiyat;
 };
 
+
 class Siparis : public Kiyafet
 {
 public:
@@ -191,6 +187,7 @@ private:
 	Zaman siparis_baslangic;
 	Zaman siparis_bitis;
 };
+
 
 class Kullanici : public Kisi
 {
@@ -235,51 +232,6 @@ public:
 private:
 	string kullanici_adi, eposta, adres_ilce, sifre, indirim_kodu, dtarihi;
 };
-class MainMenu
-{
-public:
-	void start();
-	void GirisMenu();
-	void MusteriGirisMenu();
-	void MusteriKayitMenu();
-	void KategoriMenu();
-	void MusteriMenu();
-<<<<<<< Updated upstream
-=======
-	void SifreDegistirMenu();
->>>>>>> Stashed changes
-	void YoneticiGirisMenu();
-	void YoneticiMenu();
-	void urun_ekleme();
-	void kurye_ekleme();
-	void sikayet_okuma();
-	void kupon_tanimlama();
-	void SiparisTakipMenu();
-	void UrunSecimMenu(string);
-	void AlisverisiBitir();
-	bool MailVerification(string mail);
-	void PasswordMasking(string& password);
-	bool PasswordVerification(string password);
-	bool DateVerification(string date);
-	void fatura_goruntuleme();
-	Kullanici kullanici;
-	Siparis siparis;
-	int sepetBoyutu = 0;
-	Kiyafet sepet[20];
-<<<<<<< Updated upstream
-	//void SepeteEkle(Kiyafet);
-	
-=======
-	Zaman simdi;
-	time_t now = time(0);
-	tm* ltm = localtime(&now);
-
->>>>>>> Stashed changes
-	int SepetFiyati();
-
-private:
-
-};
 
 class Kurye : public Kisi
 {
@@ -303,6 +255,46 @@ private:
 	Zaman dagitim_bitisler;
 	int siparisnumralari;
 };
+
+class MainMenu
+{
+public:
+	void start();
+	void GirisMenu();
+	void MusteriGirisMenu();
+	void MusteriKayitMenu();
+	void KategoriMenu();
+	void MusteriMenu();
+	void SifreDegistirMenu();
+	void YoneticiGirisMenu();
+	void YoneticiMenu();
+	void urun_ekleme();
+	void kurye_ekleme();
+	void sikayet_okuma();
+	void kupon_tanimlama();
+	void SiparisTakipMenu();
+	void UrunSecimMenu(string);
+	void AlisverisiBitir();
+	bool MailVerification(string mail);
+	void PasswordMasking(string& password);
+	bool PasswordVerification(string password);
+	bool DateVerification(string date);
+	void fatura_goruntuleme();
+	Kullanici kullanici;
+	Kurye kurye_gonderme();
+	Siparis siparis;
+	int sepetBoyutu = 0;
+	Kiyafet sepet[20];
+	Zaman simdi;
+	time_t now = time(0);
+	tm* ltm = localtime(&now);
+
+	int SepetFiyati();
+
+private:
+
+};
+
 
 
 class Yonetici
@@ -363,6 +355,7 @@ void MainMenu::start()
 
 }
 
+
 void MainMenu::GirisMenu()
 {
 	cls();
@@ -385,6 +378,7 @@ void MainMenu::GirisMenu()
 		break;
 	}
 }
+
 
 void MainMenu::MusteriGirisMenu()
 {
@@ -432,6 +426,7 @@ void MainMenu::MusteriGirisMenu()
 		}
 	}
 }
+
 
 void MainMenu::MusteriKayitMenu()
 {
@@ -506,12 +501,13 @@ void MainMenu::MusteriKayitMenu()
 	}
 }
 
+
 void MainMenu::MusteriMenu()
 {
 	cls();
 	int selection;
 	cout << "Giris yapmak istediginiz modulu seciniz.\n" << "[1] Kategorileri goster.\n" << "[2] Siparis takip.\n"
-		<< "[3] Sikayet/Oneri.\n" << "[4] Sifre Degistir.\n" << endl;
+		<< "[3] Sikayet/Oneri.\n" << "[4] Sifre Degistir.\n" << "[5] Cikis \n" << endl;
 	cin >> selection;
 	cls();
 	switch (selection)
@@ -522,14 +518,11 @@ void MainMenu::MusteriMenu()
 	case 2:
 		SiparisTakipMenu();
 		break;
-<<<<<<< Updated upstream
-=======
 	case 4:
 		SifreDegistirMenu();
 		break;
 	case 5:
 		start();
->>>>>>> Stashed changes
 	default:
 		break;
 	}
@@ -590,7 +583,7 @@ void MainMenu::kurye_ekleme()
 	cin >> kurye_soyadi;
 	cout << "Kurye Telefon Numarasi: " << endl;
 	cin >> kurye_telno;
-	txt << kurye_adi << " " << kurye_soyadi << " " << kurye_telno << endl;
+	txt << kurye_adi << " " << kurye_soyadi << " " << kurye_telno << " " << "0" << " " << "0" << endl;
 	cout << "Basariyla Eklendi" << endl;
 	YoneticiMenu();
 	// Burayı tekrardan yazmak gerek.
@@ -625,6 +618,7 @@ void MainMenu::YoneticiMenu()
 	}
 
 }
+
 
 void MainMenu::urun_ekleme()
 {
@@ -697,7 +691,6 @@ void MainMenu::sikayet_okuma()
 }
 
 
-
 void MainMenu::kupon_tanimlama()
 {
 	cls();
@@ -724,9 +717,10 @@ void MainMenu::kupon_tanimlama()
 			pos += k.length() + s.length() + ad.length() + soyad.length() + dogum.length() + adres.length() + tel.length() + mail.length() + kod.length() + 8;
 		}
 	}
-	
+
 	txt.close();
 }
+
 
 bool MainMenu::MailVerification(string mail) {
 	if (mail.find("@") != string::npos && (mail.find(".com") != string::npos || mail.find(".net") != string::npos || mail.find(".org") != string::npos))
@@ -739,8 +733,6 @@ bool MainMenu::MailVerification(string mail) {
 	}
 }
 
-<<<<<<< Updated upstream
-=======
 void MainMenu::PasswordMasking(string& password)
 {
 	char ch;
@@ -828,7 +820,6 @@ bool MainMenu::DateVerification(string date)
 }
 
 
->>>>>>> Stashed changes
 void MainMenu::KategoriMenu() {
 	cls();
 	int selection;
@@ -863,6 +854,7 @@ void MainMenu::KategoriMenu() {
 		break;
 	}
 }
+
 
 void MainMenu::UrunSecimMenu(string kategori) {
 	cls();
@@ -930,13 +922,13 @@ void MainMenu::UrunSecimMenu(string kategori) {
 	}
 }
 
+
 int MainMenu::SepetFiyati() {
 	int toplam = 0;
 	for (int i = 0; i < sepetBoyutu; i++)
 		toplam += sepet[i].getFiyat();
 	return toplam;
 }
-
 
 
 void MainMenu::AlisverisiBitir() {
@@ -949,19 +941,11 @@ void MainMenu::AlisverisiBitir() {
 	cout << "Urunlerin gonderilecegi adres: " << kullanici.getAdresIlce() << endl;
 	ofstream faturatxt("fatura.txt", ios::app);
 	string urunler = "";
+	auto kurye = kurye_gonderme();
+	auto zaman = kurye.getDagitimBitisler();
 	for (int i = 0; i < sepetBoyutu; i++) {
 		urunler += "\\t" + sepet[i].getKategori() + " " + sepet[i].getBoyut() + "Beden " + sepet[i].getRenk() + " " + to_string(sepet[i].getFiyat()) + "TL\\n";
 	}
-<<<<<<< Updated upstream
-	faturatxt << "Alisverisi yapan: " << kullanici.getKullaniciAdi() << "\\nAlinan urunler: \\n" << urunler << "Gonderilecek adres: " << kullanici.getAdresIlce() << " Toplam fiyat: " << SepetFiyati() << "\\n\\n" << endl;
-	//kurye gonderilecek
-	//siparis takip fonksiyonu yazilacak
-	cin >> selection;
-	sepetBoyutu = 0;
-	cls();
-	MusteriMenu();
-	
-=======
 	
 	faturatxt << "Alisverisi yapan: " << kullanici.getKullaniciAdi() << "\\nAlinan urunler: \\n" << urunler << "Gonderilecek adres: " << kullanici.getAdresIlce() << " Toplam fiyat: " << SepetFiyati() << "\\n" << "Gönderilen kurye: \\n\\t " << kurye.getAd() << " " << kurye.getSoyad() << "\\n\\t" << "Telefon numarasi: " << kurye.getTelNo() << "\\n\\t" << "Teslim saati: " << zaman << "\\n\\n" << endl;
 	faturatxt.close();
@@ -978,8 +962,8 @@ void MainMenu::AlisverisiBitir() {
 		break;
 	}
 
->>>>>>> Stashed changes
 }
+
 
 void MainMenu::SiparisTakipMenu() {
 	cls();
@@ -988,14 +972,9 @@ void MainMenu::SiparisTakipMenu() {
 	ifstream faturatxt("fatura.txt");
 	string text;
 	int index = 0;
-	
+
 	while (getline(faturatxt, text))
 	{
-<<<<<<< Updated upstream
-		size_t position;
-		while ((position = text.find("\\n")) != std::string::npos) {
-			text.replace(position, 2, "\n");
-=======
 		auto pos = text.find("Alisverisi yapan: " + kullanici.getKullaniciAdi() + "\\");
 		//cout << pos << endl;
 		if (pos == 0) {
@@ -1009,13 +988,7 @@ void MainMenu::SiparisTakipMenu() {
 			}
 			cout << text << endl;
 			index++;
->>>>>>> Stashed changes
 		}
-		while ((position = text.find("\\t")) != std::string::npos) {
-			text.replace(position, 2, "\t");
-		}
-		cout << text << endl;
-		index++;
 	}
 	faturatxt.close();
 	cout << "\n";
@@ -1029,6 +1002,7 @@ void MainMenu::SiparisTakipMenu() {
 	default:
 		break;
 	}
+
 }
 
 
@@ -1068,8 +1042,6 @@ void MainMenu::fatura_goruntuleme() {
 	}
 }
 
-<<<<<<< Updated upstream
-=======
 Kurye MainMenu::kurye_gonderme()
 {
 	string adres;
@@ -1183,22 +1155,24 @@ Kurye MainMenu::kurye_gonderme()
 			}
 		}
 		if (ctr2 != 0) {
+			txt.close();
+			ifstream txt2("kuryeler.txt");
 			//cout << ctr2 << "dddd" << endl;
-			ofstream temp("temp.txt");
-			while (txt >> kurye_ad >> kurye_soyad >> kurye_tel >> kurye_donus_saati >> kurye_donus_dakikasi)
+			ofstream temp2("temp2.txt");
+			while (txt2 >> kurye_ad >> kurye_soyad >> kurye_tel >> kurye_donus_saati >> kurye_donus_dakikasi)
 			{
 				if (kurye_ad == encabuk.getAd()) {
-					temp << kurye_ad << kurye_soyad << kurye_tel << encabuk.getDagitimBitisler().getSaat() << encabuk.getDagitimBitisler().getDakika() << endl;
+					temp2 << kurye_ad << " " << kurye_soyad << " " << kurye_tel << " " << encabuk.getDagitimBitisler().getSaat() << " " << encabuk.getDagitimBitisler().getDakika() << endl;
 				}
 				else
 				{
-					temp << kurye_ad << " " << kurye_soyad << " " << kurye_tel << " " << kurye_donus_saati << " " << kurye_donus_dakikasi << endl;
+					temp2 << kurye_ad << " " << kurye_soyad << " " << kurye_tel << " " << kurye_donus_saati << " " << kurye_donus_dakikasi << endl;
 				}
 			}
-			temp.close();
-			kurye_txt.close();
+			temp2.close();
+			txt2.close();
 			remove("kuryeler.txt");
-			rename("temp.txt", "kuryeler.txt");
+			rename("temp2.txt", "kuryeler.txt");
 			cout << "Kurye yola cikti, tahmini donus saati : " << encabuk.getDagitimBitisler() << endl;
 			return encabuk;
 		}
@@ -1250,7 +1224,6 @@ void MainMenu::SifreDegistirMenu() {
 }
 
 
->>>>>>> Stashed changes
 int main()
 {
 	MainMenu mainMenu;

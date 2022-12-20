@@ -41,7 +41,7 @@ public:
 		return kurye_donus;
 
 	}
-	
+
 	time_t getSaat() {
 		return saat;
 	}
@@ -458,7 +458,7 @@ void MainMenu::MusteriKayitMenu()
 	cout << "[1] Ortahisar \n[2] Akcaabat \n[3] Vakfikebir \n[4] Besikduzu \n[5] Yomra \n[6] Arsin \n[7] Arakli " << endl;
 	cin >> adres;
 	cout << "Telefon Numaraniz: "; cin >> telNo;
-	cout << "Mail Adresiniz: "; 
+	cout << "Mail Adresiniz: ";
 	while (true)
 	{
 		cin >> mail;
@@ -473,7 +473,7 @@ void MainMenu::MusteriKayitMenu()
 	}
 	//mail adresi kontrol edilecek;
 	cout << "Bir kullanici adi belirleyiniz: "; cin >> kullaniciAdi;
-	cout << "Bir sifre belirleyiniz: "; 
+	cout << "Bir sifre belirleyiniz: ";
 	PasswordMasking(sifre);
 	while (true)
 	{
@@ -965,11 +965,42 @@ int MainMenu::SepetFiyati() {
 void MainMenu::AlisverisiBitir() {
 	cls();
 	int selection;
+	string ilce;
+    if(kullanici.getAdresIlce() == "1")
+    {
+        ilce = "Ortahisar";
+    }
+    else if(kullanici.getAdresIlce() == "2")
+    {
+        ilce = "Akcaabat";
+    }
+    else if(kullanici.getAdresIlce() == "3")
+    {
+        ilce = "Vakfikebir";
+    }
+    else if(kullanici.getAdresIlce() == "4")
+    {
+        ilce = "Besikduzu";
+    }
+    else if(kullanici.getAdresIlce() == "5")
+    {
+        ilce = "Yomra";
+    }
+    else if(kullanici.getAdresIlce() == "6")
+    {
+        ilce = "Arsin";
+    }
+    else if(kullanici.getAdresIlce() == "7")
+    {
+        ilce = "Arakli";
+    }
+    else
+        ilce = "Hata!";
 	cout << "Satin aldiginiz urunler: " << endl;
 	for (int i = 0; i < sepetBoyutu; i++)
 		cout << "\t" << sepet[i].getKategori() << " " << sepet[i].getBoyut() << "Beden " << sepet[i].getRenk() << " " << sepet[i].getFiyat() << "TL" << endl;
 	cout << "Toplam tutar: " << SepetFiyati() << "TL" << endl;
-	cout << "Urunlerin gonderilecegi adres: " << kullanici.getAdresIlce() << endl;
+	cout << "Urunlerin gonderilecegi adres: " << ilce << endl;
 	ofstream faturatxt("fatura.txt", ios::app);
 	string urunler = "";
 	auto kurye = kurye_gonderme();
@@ -977,7 +1008,7 @@ void MainMenu::AlisverisiBitir() {
 	for (int i = 0; i < sepetBoyutu; i++) {
 		urunler += "\\t" + sepet[i].getKategori() + " " + sepet[i].getBoyut() + "Beden " + sepet[i].getRenk() + " " + to_string(sepet[i].getFiyat()) + "TL\\n";
 	}
-	
+
 	faturatxt << "Alisverisi yapan: " << kullanici.getKullaniciAdi() << "\\nAlinan urunler: \\n" << urunler << "Gonderilecek adres: " << kullanici.getAdresIlce() << " Toplam fiyat: " << SepetFiyati() << "\\n" << "Gonderilen kurye: \\n\\t " << kurye.getAd() << " " << kurye.getSoyad() << "\\n\\t" << "Telefon numarasi: " << kurye.getTelNo() << "\\n\\t" << "Teslim saati: " << zaman << "\\n\\n" << endl;
 	faturatxt.close();
 	sepetBoyutu = 0;
@@ -1085,7 +1116,7 @@ Kurye MainMenu::kurye_gonderme()
 	simdi.setSaat(ltm->tm_hour);
 
 	string kurye_ad, kurye_soyad, kurye_tel, kurye_donus_saati, kurye_donus_dakikasi;
-	
+
 	adres = kullanici.getAdresIlce();
 
 	if (adres == "1" || adres == "Ortahisar")
@@ -1129,7 +1160,7 @@ Kurye MainMenu::kurye_gonderme()
 
 	ifstream kurye_txt("kuryeler.txt");
 	ofstream temp("temp.txt");
-	
+
 	Zaman sifir;
 	sifir.setSaat(999);
 	sifir.setDakika(999);
@@ -1159,7 +1190,7 @@ Kurye MainMenu::kurye_gonderme()
 		}
 	}
 
-	
+
 	if (ctr != 0) {
 		kurye_txt.close();
 		temp.close();
@@ -1213,7 +1244,7 @@ Kurye MainMenu::kurye_gonderme()
 			cout << "Uygun kurye yok." << endl;
 		}
 	}
-	
+
 
 }
 

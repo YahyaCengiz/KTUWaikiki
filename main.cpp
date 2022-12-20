@@ -4,17 +4,17 @@
 #include <locale.h>
 #include <fstream>
 #include <string>
-#include <stdlib.h>
 #include <istream>
 #include <sstream>
 #include <stdio.h>
 #include <io.h>
 #include <conio.h>
 #include <ctime>
+#include <stdlib.h>
 
 using namespace std;
 
-inline void cls() { system("CLS"); }
+inline void cls() { system("CLS"); cout << "\t\t\tKTU Waikiki\n\n"; }
 
 class Zaman
 {
@@ -41,6 +41,7 @@ public:
 		return kurye_donus;
 
 	}
+	
 	time_t getSaat() {
 		return saat;
 	}
@@ -60,6 +61,16 @@ public:
 private:
 	int saat, dakika;
 };
+
+ostream& operator << (ostream& out, Zaman zaman)
+{
+	out << zaman.getSaat() << ":";
+	if (zaman.getDakika() < 10)
+		out << "0" << zaman.getDakika();
+	else
+		out << zaman.getDakika();
+	return out;
+}
 
 
 
@@ -88,6 +99,7 @@ public:
 private:
 	string ad, soyad, telno;
 };
+
 
 class Kiyafet
 {
@@ -135,6 +147,7 @@ private:
 	double fiyat;
 };
 
+
 class Siparis : public Kiyafet
 {
 public:
@@ -174,6 +187,7 @@ private:
 	Zaman siparis_baslangic;
 	Zaman siparis_bitis;
 };
+
 
 class Kullanici : public Kisi
 {
@@ -218,40 +232,6 @@ public:
 private:
 	string kullanici_adi, eposta, adres_ilce, sifre, indirim_kodu, dtarihi;
 };
-class MainMenu
-{
-public:
-	void ktuWaikikiText() {
-		cout << "\t\t\tKTU Waikiki\n\n";
-	}
-	void start();
-	void GirisMenu();
-	void MusteriGirisMenu();
-	void MusteriKayitMenu();
-	void KategoriMenu();
-	void MusteriMenu();
-	void YoneticiGirisMenu();
-	void YoneticiMenu();
-	void urun_ekleme();
-	void kurye_ekleme();
-	void sikayet_okuma();
-	void kupon_tanimlama();
-	void SiparisTakipMenu();
-	void UrunSecimMenu(string);
-	void AlisverisiBitir();
-	bool MailVerification(string mail);
-	void fatura_goruntuleme();
-	Kullanici kullanici;
-	Siparis siparis;
-	int sepetBoyutu = 0;
-	Kiyafet sepet[20];
-	//void SepeteEkle(Kiyafet);
-	
-	int SepetFiyati();
-
-private:
-
-};
 
 class Kurye : public Kisi
 {
@@ -275,6 +255,47 @@ private:
 	Zaman dagitim_bitisler;
 	int siparisnumralari;
 };
+
+class MainMenu
+{
+public:
+	void start();
+	void GirisMenu();
+	void MusteriGirisMenu();
+	void MusteriKayitMenu();
+	void KategoriMenu();
+	void MusteriMenu();
+	void SifreDegistirMenu();
+	void YoneticiGirisMenu();
+	void SikayetOneriMenu();
+	void YoneticiMenu();
+	void urun_ekleme();
+	void kurye_ekleme();
+	void sikayet_okuma();
+	void kupon_tanimlama();
+	void SiparisTakipMenu();
+	void UrunSecimMenu(string);
+	void AlisverisiBitir();
+	bool MailVerification(string mail);
+	void PasswordMasking(string& password);
+	bool PasswordVerification(string password);
+	bool DateVerification(string date);
+	void fatura_goruntuleme();
+	Kullanici kullanici;
+	Kurye kurye_gonderme();
+	Siparis siparis;
+	int sepetBoyutu = 0;
+	Kiyafet sepet[20];
+	Zaman simdi;
+	time_t now = time(0);
+	tm* ltm = localtime(&now);
+
+	int SepetFiyati();
+
+private:
+
+};
+
 
 
 class Yonetici
@@ -310,12 +331,11 @@ private:
 void MainMenu::start()
 {
 	int selection;
-	ktuWaikikiText();
+	cls();
 	cout << "Modullerden birini secerek isleminize devam edebilirsiniz." << endl;
 	cout << "[1] Sisteme giris.\n" << "[2] Yeni uye kayit.\n" << "[3] Cikis." << endl;
 
 	cin >> selection;
-	cls();
 	switch (selection)
 	{
 	case 1:
@@ -325,7 +345,7 @@ void MainMenu::start()
 		MusteriKayitMenu();
 		break;
 	case 3:
-		ktuWaikikiText();
+		cls();
 		cout << "Basariyla ciktiniz." << endl;
 		break;
 	default:
@@ -336,13 +356,13 @@ void MainMenu::start()
 
 }
 
+
 void MainMenu::GirisMenu()
 {
-	ktuWaikikiText();
-	int selection;
-	cout << "Giris yapmak istediginiz modulu seciniz.\n" << "[1] Musteri girisi.\n" << "[2] Yonetici girisi." << endl;
-	cin >> selection;
 	cls();
+	int selection;
+	cout << "Giris yapmak istediginiz modulu seciniz.\n" << "[1] Musteri girisi.\n" << "[2] Yonetici girisi.\n[3] Geri don." << endl;
+	cin >> selection;
 
 
 	switch (selection)
@@ -353,6 +373,9 @@ void MainMenu::GirisMenu()
 	case 2:
 		YoneticiGirisMenu();
 		break;
+	case 3:
+		start();
+		break;
 	default:
 		cout << "Hatali secim yaptiniz, lutfen tekrar deneyiniz." << endl;
 		GirisMenu();
@@ -360,15 +383,17 @@ void MainMenu::GirisMenu()
 	}
 }
 
+
 void MainMenu::MusteriGirisMenu()
 {
 	string kullaniciAdi, sifre, k, s, tel, mail, ad, soyad, adres, dogum, kod;
 	int ctr = 0;
-	ktuWaikikiText();
+	int selection;
+	cls();
 	cout << "Kullanici adinizi giriniz: ";
 	cin >> kullaniciAdi;
 	cout << "Sifrenizi giriniz: ";
-	cin >> sifre;
+	PasswordMasking(sifre);
 	ifstream txt("kullanici.txt");
 
 
@@ -390,10 +415,22 @@ void MainMenu::MusteriGirisMenu()
 		this->kullanici.setIndirimKodu(kod);
 		MusteriMenu();
 	}
-	else {
-		cout << "olmadi " << ctr;
+	else
+	{
+		std::cout << "\nGiris basarisiz.\n\n[1] Tekrar dene.\n[2] Cikis." << endl;
+		std::cin >> selection;
+		switch (selection)
+		{
+		case 1:
+			MusteriGirisMenu();
+			break;
+		case 2:
+			start();
+			break;
+		}
 	}
 }
+
 
 void MainMenu::MusteriKayitMenu()
 {
@@ -401,33 +438,81 @@ void MainMenu::MusteriKayitMenu()
 	string ad, soyad, telNo, kullaniciAdi, sifre, mail, dogumTarihi, kod = "0";
 	int adres;
 
-	ktuWaikikiText();
+	cls();
 	cout << "Adiniz: "; cin >> ad;
 	cout << "Soyadiniz: "; cin >> soyad;
-	cout << "Dogum Tarihiniz: "; cin >> dogumTarihi;
+	cout << "Dogum Tarihiniz (gg.aa.yyyy): ";
+	cin >> dogumTarihi;
+	while (true)
+	{
+		if (DateVerification(dogumTarihi)) {
+			break;
+		}
+		else
+		{
+			cout << "Dogum tarihinizi gecerli bir sekilde giriniz (gg.aa.yyyy): ";
+			cin >> dogumTarihi;
+		}
+	}
 	cout << "Adresiniz: " << endl;
 	cout << "[1] Ortahisar \n[2] Akcaabat \n[3] Vakfikebir \n[4] Besikduzu \n[5] Yomra \n[6] Arsin \n[7] Arakli " << endl;
 	cin >> adres;
 	cout << "Telefon Numaraniz: "; cin >> telNo;
-	cout << "Mail Adresiniz: "; cin >> mail;
+	cout << "Mail Adresiniz: "; 
+	while (true)
+	{
+		cin >> mail;
+		if (MailVerification(mail))
+		{
+			break;
+		}
+		else
+		{
+			cout << "Mail adresiniz hatali, lutfen tekrar deneyiniz: ";
+		}
+	}
 	//mail adresi kontrol edilecek;
 	cout << "Bir kullanici adi belirleyiniz: "; cin >> kullaniciAdi;
-	cout << "Bir sifre belirleyiniz: "; cin >> sifre;
+	cout << "Bir sifre belirleyiniz: "; 
+	PasswordMasking(sifre);
+	while (true)
+	{
+		if (!PasswordVerification(sifre)) {
+			sifre = "";
+			cout << "\nSifre yeterince guclu degil. Yeniden deneyiniz: ";
+			PasswordMasking(sifre);
+		}
+		else
+		{
+			break;
+		}
+	}
 
 	ofstream txt("kullanici.txt", ios::app);
 	txt << kullaniciAdi << " " << sifre << " " << ad << " " << soyad << " " << dogumTarihi << " " << adres << " " << telNo << " " << mail << " " << kod << endl;
-
+	cls();
 	cout << "\nKayit basarili, keyifli alisverisler." << endl;
-	MusteriGirisMenu();
+	txt.close();
+	int selection;
+	cout << "\n[1] Giris yap.\n" << endl;
+	cin >> selection;
+	switch (selection)
+	{
+	case 1:
+		MusteriGirisMenu();
+		break;
+	default:
+		break;
+	}
 }
+
 
 void MainMenu::MusteriMenu()
 {
 	cls();
-	ktuWaikikiText();
 	int selection;
 	cout << "Giris yapmak istediginiz modulu seciniz.\n" << "[1] Kategorileri goster.\n" << "[2] Siparis takip.\n"
-		<< "[3] Sikayet/Oneri.\n" << "[4] Sifre Degistir.\n" << endl;
+		<< "[3] Sikayet/Oneri.\n" << "[4] Sifre Degistir.\n" << "[5] Cikis \n" << endl;
 	cin >> selection;
 	cls();
 	switch (selection)
@@ -438,22 +523,53 @@ void MainMenu::MusteriMenu()
 	case 2:
 		SiparisTakipMenu();
 		break;
+	case 3:
+		SikayetOneriMenu();
+		break;
+	case 4:
+		SifreDegistirMenu();
+		break;
+	case 5:
+		start();
 	default:
 		break;
 	}
 }
 
 
+void MainMenu::SikayetOneriMenu() {
+	cls();
+	string mesaj;
+	cout << "Mesajinizi giriniz: ";
+	cin.ignore();
+	getline(cin, mesaj);
+	ofstream txt("sikayet.txt", ios::app);
+	txt << "[Yazan:" << kullanici.getKullaniciAdi() <<  "] " << mesaj << endl;
+	txt.close();
+	cout << "Mesajiniz basariyla gonderildi.\n" << endl;
+	int selection;
+	cout << "Bir modul secerek isleminize devam edebilirsiniz.\n\n[1] Menuye don.\n" << endl;
+	cin >> selection;
+	switch (selection)
+	{
+	case 1:
+		MusteriMenu();
+		break;
+	default:
+		break;
+	}
+}
+
 void MainMenu::YoneticiGirisMenu()
 {
-	ktuWaikikiText();
+	cls();
 	Yonetici yonetici("password");
 	string yoneticiSifre, y, s, ad, soyad, dogum, adres, tel, mail, kod;
 	int ctr = 0;
 	fstream txt("kullanici.txt", ios::in);
 
 	cout << "Yonetici sifresini giriniz." << endl;
-	cin >> yoneticiSifre;
+	PasswordMasking(yoneticiSifre);
 	while (txt >> y >> s >> ad >> soyad >> dogum >> adres >> tel >> mail >> kod) {
 		if (y == "admin" && s == "password") {
 			ctr = 1;
@@ -486,7 +602,7 @@ void MainMenu::YoneticiGirisMenu()
 
 void MainMenu::kurye_ekleme()
 {
-	ktuWaikikiText();
+	cls();
 	Kurye kurye;
 	string kurye_adi, kurye_soyadi, kurye_telno;
 	//int select;
@@ -498,7 +614,7 @@ void MainMenu::kurye_ekleme()
 	cin >> kurye_soyadi;
 	cout << "Kurye Telefon Numarasi: " << endl;
 	cin >> kurye_telno;
-	txt << kurye_adi << " " << kurye_soyadi << " " << kurye_telno << endl;
+	txt << kurye_adi << " " << kurye_soyadi << " " << kurye_telno << " " << "0" << " " << "0" << endl;
 	cout << "Basariyla Eklendi" << endl;
 	YoneticiMenu();
 	// Burayı tekrardan yazmak gerek.
@@ -528,12 +644,16 @@ void MainMenu::YoneticiMenu()
 		sikayet_okuma();
 	case 4:
 		kupon_tanimlama();
+	case 5:
+		fatura_goruntuleme();
 	}
 
 }
 
+
 void MainMenu::urun_ekleme()
 {
+	cls();
 	ofstream urunler("urunler.txt", ios::app);
 	string kategori, fiyat, boyut, renk;
 	int kategori_secim;
@@ -580,15 +700,17 @@ void MainMenu::urun_ekleme()
 
 void MainMenu::sikayet_okuma()
 {
+	cls();
 	ifstream txt("sikayet.txt");
 	string text;
-	while (txt)
+	auto index = 0;
+	while (getline(txt, text))
 	{
-		text = txt.get();
-		cout << text;
+		cout << "[" << ++index << "] " << text << endl;
 	}
 	int select;
-	cout << "\n\nDevam etmek icin 1'e bas." << endl;
+	cout << "\n\nBir modul secerek isleminize devam edebilirsiniz.\n" << endl;
+	cout << "[1] Menuye don." << endl;
 	cin >> select;
 	switch (select)
 	{
@@ -600,10 +722,9 @@ void MainMenu::sikayet_okuma()
 }
 
 
-
 void MainMenu::kupon_tanimlama()
 {
-	cls(); ktuWaikikiText();
+	cls();
 	cout << "Kupon tanimlanacak kullanici adini giriniz: ";
 	string hangikullanici; cin >> hangikullanici;
 	cout << "Kupon kodunu giriniz: ";
@@ -627,12 +748,13 @@ void MainMenu::kupon_tanimlama()
 			pos += k.length() + s.length() + ad.length() + soyad.length() + dogum.length() + adres.length() + tel.length() + mail.length() + kod.length() + 8;
 		}
 	}
-	
+
 	txt.close();
 }
 
+
 bool MainMenu::MailVerification(string mail) {
-	if (mail.find("@") != string::npos && mail.find(".com") != string::npos)
+	if (mail.find("@") != string::npos && (mail.find(".com") != string::npos || mail.find(".net") != string::npos || mail.find(".org") != string::npos))
 	{
 		return true;
 	}
@@ -641,6 +763,93 @@ bool MainMenu::MailVerification(string mail) {
 		return false;
 	}
 }
+
+void MainMenu::PasswordMasking(string& password)
+{
+	char ch;
+	ch = _getch();
+	while (ch != 13) //character 13 is enter
+	{
+		if (ch == 8) {
+			if (password.empty() == false)
+			{
+				cout << '\b' << " " << '\b';
+				password.pop_back();
+			}
+			ch = _getch();
+			continue;
+		}
+		password.push_back(ch);
+		cout << '*';
+		ch = _getch();
+	}
+}
+
+bool MainMenu::PasswordVerification(string password)
+{
+	bool hasUpper = false;
+	bool hasLower = false;
+	bool hasDigit = false;
+	bool hasSpecial = false;
+	for (int i = 0; i < password.length(); i++)
+	{
+		if (isupper(password[i]))
+		{
+			hasUpper = true;
+		}
+		else if (islower(password[i]))
+		{
+			hasLower = true;
+		}
+		else if (isdigit(password[i]))
+		{
+			hasDigit = true;
+		}
+		else if (ispunct(password[i]))
+		{
+			hasSpecial = true;
+		}
+	}
+	if (hasUpper && hasLower && hasDigit && hasSpecial)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+//date format controller function
+bool MainMenu::DateVerification(string date)
+{
+	if (date.length() != 10)
+	{
+		return false;
+	}
+	else
+	{
+		if (date[2] != '.' || date[5] != '.')
+		{
+			return false;
+		}
+		else
+		{
+			string day = date.substr(0, 2);
+			string month = date.substr(3, 2);
+			string year = date.substr(6, 4);
+			if (stoi(day) > 31 || stoi(day) < 1 || stoi(month) > 12 || stoi(month) < 1 || stoi(year) > 2022 || stoi(year) < 1900)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+	}
+}
+
 
 void MainMenu::KategoriMenu() {
 	cls();
@@ -676,6 +885,7 @@ void MainMenu::KategoriMenu() {
 		break;
 	}
 }
+
 
 void MainMenu::UrunSecimMenu(string kategori) {
 	cls();
@@ -743,13 +953,13 @@ void MainMenu::UrunSecimMenu(string kategori) {
 	}
 }
 
+
 int MainMenu::SepetFiyati() {
 	int toplam = 0;
 	for (int i = 0; i < sepetBoyutu; i++)
 		toplam += sepet[i].getFiyat();
 	return toplam;
 }
-
 
 
 void MainMenu::AlisverisiBitir() {
@@ -762,18 +972,29 @@ void MainMenu::AlisverisiBitir() {
 	cout << "Urunlerin gonderilecegi adres: " << kullanici.getAdresIlce() << endl;
 	ofstream faturatxt("fatura.txt", ios::app);
 	string urunler = "";
+	auto kurye = kurye_gonderme();
+	auto zaman = kurye.getDagitimBitisler();
 	for (int i = 0; i < sepetBoyutu; i++) {
 		urunler += "\\t" + sepet[i].getKategori() + " " + sepet[i].getBoyut() + "Beden " + sepet[i].getRenk() + " " + to_string(sepet[i].getFiyat()) + "TL\\n";
 	}
-	faturatxt << "Alisverisi yapan: " << kullanici.getKullaniciAdi() << "\\nAlinan urunler: \\n" << urunler << "Gonderilecek adres: " << kullanici.getAdresIlce() << " Toplam fiyat: " << SepetFiyati() << "\\n\\n" << endl;
-	//kurye gonderilecek
-	//siparis takip fonksiyonu yazilacak
-	cin >> selection;
-	sepetBoyutu = 0;
-	cls();
-	MusteriMenu();
 	
+	faturatxt << "Alisverisi yapan: " << kullanici.getKullaniciAdi() << "\\nAlinan urunler: \\n" << urunler << "Gonderilecek adres: " << kullanici.getAdresIlce() << " Toplam fiyat: " << SepetFiyati() << "\\n" << "Gonderilen kurye: \\n\\t " << kurye.getAd() << " " << kurye.getSoyad() << "\\n\\t" << "Telefon numarasi: " << kurye.getTelNo() << "\\n\\t" << "Teslim saati: " << zaman << "\\n\\n" << endl;
+	faturatxt.close();
+	sepetBoyutu = 0;
+	cout << "Bir modul secerek isleminize devam edebilirsiniz.\n" << endl;
+	cout << "[1] Menuye Don\n" << endl;
+	cin >> selection;
+	switch (selection)
+	{
+	case 1:
+		MusteriMenu();
+		break;
+	default:
+		break;
+	}
+
 }
+
 
 void MainMenu::SiparisTakipMenu() {
 	cls();
@@ -782,18 +1003,23 @@ void MainMenu::SiparisTakipMenu() {
 	ifstream faturatxt("fatura.txt");
 	string text;
 	int index = 0;
-	
+
 	while (getline(faturatxt, text))
 	{
-		size_t position;
-		while ((position = text.find("\\n")) != std::string::npos) {
-			text.replace(position, 2, "\n");
+		auto pos = text.find("Alisverisi yapan: " + kullanici.getKullaniciAdi() + "\\");
+		//cout << pos << endl;
+		if (pos == 0) {
+			cout << "[" << index+1 << "]" << endl;
+			size_t position;
+			while ((position = text.find("\\n")) != std::string::npos) {
+				text.replace(position, 2, "\n");
+			}
+			while ((position = text.find("\\t")) != std::string::npos) {
+				text.replace(position, 2, "\t");
+			}
+			cout << text << endl;
+			index++;
 		}
-		while ((position = text.find("\\t")) != std::string::npos) {
-			text.replace(position, 2, "\t");
-		}
-		cout << text << endl;
-		index++;
 	}
 	faturatxt.close();
 	cout << "\n";
@@ -807,29 +1033,232 @@ void MainMenu::SiparisTakipMenu() {
 	default:
 		break;
 	}
+
 }
 
 
+void MainMenu::fatura_goruntuleme() {
+	cls();
+	int selection;
+	cout << "Siparisler: \n" << endl;
+	ifstream faturatxt("fatura.txt");
+	string text;
+	int index = 0;
+
+	while (getline(faturatxt, text))
+	{
+		cout << "[" << index+1 << "]" << endl;
+		size_t position;
+		while ((position = text.find("\\n")) != std::string::npos) {
+			text.replace(position, 2, "\n");
+		}
+		while ((position = text.find("\\t")) != std::string::npos) {
+			text.replace(position, 2, "\t");
+		}
+		cout << text << endl;
+		index++;
+	}
+	faturatxt.close();
+	cout << "\n";
+	cout << "Bir modul secerek isleminize devam edebilirsiniz" << endl;
+	cout << "[1] Menuye Don\n" << endl;
+	cin >> selection;
+	switch (selection)
+	{
+	case 1:
+		YoneticiMenu();
+		break;
+	default:
+		break;
+	}
+}
+
+Kurye MainMenu::kurye_gonderme()
+{
+	string adres;
+	Zaman adres_zaman;
+	Kurye kurye; //bu kurye return edilecek
+
+	int position = 0;
+
+	simdi.setDakika(ltm->tm_min);
+	simdi.setSaat(ltm->tm_hour);
+
+	string kurye_ad, kurye_soyad, kurye_tel, kurye_donus_saati, kurye_donus_dakikasi;
+	
+	adres = kullanici.getAdresIlce();
+
+	if (adres == "1" || adres == "Ortahisar")
+	{
+		adres_zaman.setSaat(0);
+		adres_zaman.setDakika(35);
+	}
+	else if (adres == "2" || adres == "Akçaabat")
+	{
+		adres_zaman.setSaat(0);
+		adres_zaman.setDakika(50);
+	}
+	else if (adres == "3" || adres == "Vakfıkebir")
+	{
+		adres_zaman.setSaat(1);
+		adres_zaman.setDakika(30);
+	}
+	else if (adres == "4" || adres == "Beşikdüzü")
+	{
+		adres_zaman.setSaat(1);
+		adres_zaman.setDakika(50);
+	}
+	else if (adres == "5" || adres == "Yomra")
+	{
+		adres_zaman.setSaat(0);
+		adres_zaman.setDakika(55);
+	}
+	else if (adres == "6" || adres == "Arsin")
+	{
+		adres_zaman.setSaat(1);
+		adres_zaman.setDakika(20);
+	}
+	else if (adres == "7" || adres == "Araklı")
+	{
+		adres_zaman.setSaat(1);
+		adres_zaman.setDakika(40);
+	}
+	else
+		cout << "Hata" << endl;
+
+
+	ifstream kurye_txt("kuryeler.txt");
+	ofstream temp("temp.txt");
+	
+	Zaman sifir;
+	sifir.setSaat(999);
+	sifir.setDakika(999);
+	Kurye encabuk;
+	encabuk.setDagitimBitisler(sifir);
+	int ctr = 0;
+	bool isSent = false;
+	while (kurye_txt >> kurye_ad >> kurye_soyad >> kurye_tel >> kurye_donus_saati >> kurye_donus_dakikasi)
+	{
+		if (kurye_donus_saati == "0" && kurye_donus_dakikasi == "0" && !isSent)
+		{
+			isSent = true;
+			ctr++;
+			Zaman kurye_donus_zamani;
+			kurye_donus_zamani = simdi + adres_zaman;
+			kurye.setAd(kurye_ad);
+			kurye.setSoyad(kurye_soyad);
+			kurye.setTelNo(kurye_tel);
+			kurye.setDagitimBitisler(kurye_donus_zamani);
+
+			temp << kurye_ad << " " << kurye_soyad << " " << kurye_tel << " " << kurye_donus_zamani.getSaat() << " " << kurye_donus_zamani.getDakika() << endl;
+
+		}
+		else
+		{
+			temp << kurye_ad << " " << kurye_soyad << " " << kurye_tel << " " << kurye_donus_saati << " " << kurye_donus_dakikasi << endl;
+		}
+	}
+
+	
+	if (ctr != 0) {
+		kurye_txt.close();
+		temp.close();
+		remove("kuryeler.txt");
+		rename("temp.txt", "kuryeler.txt");
+		cout << "Kurye gonderildi. Tahmini varis zamani: " << kurye.getDagitimBitisler() << endl;
+		return kurye;
+	}
+	else {
+		temp.close();
+		kurye_txt.close();
+		remove("temp.txt");
+		ifstream txt("kuryeler.txt");
+		int ctr2 = 0;
+		while (txt >> kurye_ad >> kurye_soyad >> kurye_tel >> kurye_donus_saati >> kurye_donus_dakikasi)
+		{
+			if ((stoi(kurye_donus_saati) < encabuk.getDagitimBitisler().getSaat() || (stoi(kurye_donus_saati) == encabuk.getDagitimBitisler().getSaat() && stoi(kurye_donus_dakikasi) < encabuk.getDagitimBitisler().getDakika())))
+			{
+				ctr2++;
+				encabuk.setAd(kurye_ad);
+				encabuk.setSoyad(kurye_soyad);
+				encabuk.setTelNo(kurye_tel);
+				sifir.setSaat(stoi(kurye_donus_saati));
+				sifir.setDakika(stoi(kurye_donus_dakikasi));
+				encabuk.setDagitimBitisler(sifir + adres_zaman);
+			}
+		}
+		if (ctr2 != 0) {
+			txt.close();
+			ifstream txt2("kuryeler.txt");
+			//cout << ctr2 << "dddd" << endl;
+			ofstream temp2("temp2.txt");
+			while (txt2 >> kurye_ad >> kurye_soyad >> kurye_tel >> kurye_donus_saati >> kurye_donus_dakikasi)
+			{
+				if (kurye_ad == encabuk.getAd()) {
+					temp2 << kurye_ad << " " << kurye_soyad << " " << kurye_tel << " " << encabuk.getDagitimBitisler().getSaat() << " " << encabuk.getDagitimBitisler().getDakika() << endl;
+				}
+				else
+				{
+					temp2 << kurye_ad << " " << kurye_soyad << " " << kurye_tel << " " << kurye_donus_saati << " " << kurye_donus_dakikasi << endl;
+				}
+			}
+			temp2.close();
+			txt2.close();
+			remove("kuryeler.txt");
+			rename("temp2.txt", "kuryeler.txt");
+			cout << "Kurye yola cikti, tahmini donus saati : " << encabuk.getDagitimBitisler() << endl;
+			return encabuk;
+		}
+		else {
+			cout << "Uygun kurye yok." << endl;
+		}
+	}
+	
+
+}
+
+
+void MainMenu::SifreDegistirMenu() {
+	cls();
+	ofstream out("temp.txt");
+	ifstream in("kullanici.txt");
+	string ys;
+	cout << "Yeni sifrenizi giriniz: ";
+	cin >> ys;
+	string k, s, ad, soyad, dt, adres, tel, mail, kod;
+	int selection;
+	while (in >> k >> s >> ad >> soyad >> dt >> adres >> tel >> mail >> kod)
+	{
+		if (k == kullanici.getKullaniciAdi()) {
+			out << k << " " << ys << " " << ad << " " << soyad << " " << dt << " " << adres << " " << tel << " " << mail << " " << kod << endl;
+		}
+		else {
+			out << k << " " << s << " " << ad << " " << soyad << " " << dt << " " << adres << " " << tel << " " << mail << " " << kod << endl;
+		}
+	}
+	kullanici.setSifre(ys);
+	out.close();
+	in.close();
+	remove("kullanici.txt");
+	rename("temp.txt", "kullanici.txt");
+	cls();
+	cout << "Sifreniz basariyla degistirildi.\n" << endl;
+	cout << "Bir modul secerek isleminize devam edebilirsiniz." << endl;
+	cout << "[1] Menuye Don\n" << endl;
+	cin >> selection;
+	switch (selection)
+	{
+	case 1:
+		MusteriMenu();
+		break;
+	default:
+		break;
+	}
+}
 
 
 int main()
 {
-	////Simdiki Zaman Icin Bir Zaman Objesi Olusturduk
-	//Zaman zaman;
-	//time_t now = time(0);
-	//tm* ltm = localtime(&now);
-	//zaman.setDakika(ltm->tm_min);
-	//zaman.setSaat(ltm->tm_hour);
-
-	//// Kurye'nin Gidis-Gelis Zamani
-	//Zaman kurye_zaman;
-	//kurye_zaman.setSaat(12);
-	//kurye_zaman.setDakika(50);
-
-	//// Kurye'nin Donus Zamani
-	//Zaman kurye_donus;
-	//kurye_donus = zaman + kurye_zaman;
-
 	MainMenu mainMenu;
 	mainMenu.start();
 	return 0;

@@ -538,7 +538,7 @@ void MainMenu::YoneticiGirisMenu()
 	fstream txt("kullanici.txt", ios::in);
 
 	cout << "Yonetici sifresini giriniz." << endl;
-	cin >> yoneticiSifre;
+	PasswordMasking(yoneticiSifre);
 	while (txt >> y >> s >> ad >> soyad >> dogum >> adres >> tel >> mail >> kod) {
 		if (y == "admin" && s == "password") {
 			ctr = 1;
@@ -1105,10 +1105,12 @@ Kurye MainMenu::kurye_gonderme()
 	Kurye encabuk;
 	encabuk.setDagitimBitisler(sifir);
 	int ctr = 0;
+	bool isSent = false;
 	while (kurye_txt >> kurye_ad >> kurye_soyad >> kurye_tel >> kurye_donus_saati >> kurye_donus_dakikasi)
 	{
-		if (kurye_donus_saati == "0" && kurye_donus_dakikasi == "0")
+		if (kurye_donus_saati == "0" && kurye_donus_dakikasi == "0" && !isSent)
 		{
+			isSent = true;
 			ctr++;
 			Zaman kurye_donus_zamani;
 			kurye_donus_zamani = simdi + adres_zaman;
@@ -1143,7 +1145,7 @@ Kurye MainMenu::kurye_gonderme()
 		int ctr2 = 0;
 		while (txt >> kurye_ad >> kurye_soyad >> kurye_tel >> kurye_donus_saati >> kurye_donus_dakikasi)
 		{
-			if (stoi(kurye_donus_saati) < encabuk.getDagitimBitisler().getSaat() || (stoi(kurye_donus_saati) == encabuk.getDagitimBitisler().getSaat() && stoi(kurye_donus_dakikasi) < encabuk.getDagitimBitisler().getDakika()))
+			if ((stoi(kurye_donus_saati) < encabuk.getDagitimBitisler().getSaat() || (stoi(kurye_donus_saati) == encabuk.getDagitimBitisler().getSaat() && stoi(kurye_donus_dakikasi) < encabuk.getDagitimBitisler().getDakika())))
 			{
 				ctr2++;
 				encabuk.setAd(kurye_ad);

@@ -118,7 +118,7 @@ public:
 	}
 	string getIsim()
 	{
-        return isim;
+		return isim;
 	}
 	double getFiyat() {
 		return fiyat;
@@ -141,7 +141,7 @@ public:
 	}
 	void setIsim(string a)
 	{
-	    isim = a;
+		isim = a;
 	}
 
 
@@ -271,6 +271,7 @@ class MainMenu
 public:
 	void start();
 	void GirisMenu();
+	bool Selection(string& s, int a);
 	void MusteriGirisMenu();
 	void MusteriKayitMenu();
 	void KategoriMenu();
@@ -339,13 +340,18 @@ private:
 
 void MainMenu::start()
 {
-	int selection;
+	string selection = "0";
 	cls();
 	cout << "Modullerden birini secerek isleminize devam edebilirsiniz." << endl;
 	cout << "[1] Sisteme giris.\n" << "[2] Yeni uye kayit.\n" << "[3] Cikis." << endl;
 
-	cin >> selection;
-	switch (selection)
+	
+	while (!Selection(selection, 3))
+	{
+		Selection(selection, 3);
+	}
+	
+	switch (stoi(selection))
 	{
 	case 1:
 		GirisMenu();
@@ -369,12 +375,16 @@ void MainMenu::start()
 void MainMenu::GirisMenu()
 {
 	cls();
-	int selection;
+	string selection = "0";
 	cout << "Giris yapmak istediginiz modulu seciniz.\n" << "[1] Musteri girisi.\n" << "[2] Yonetici girisi.\n[3] Geri don." << endl;
-	cin >> selection;
+	
+	while (!Selection(selection, 3))
+	{
+		Selection(selection, 3);
+	}
+	
 
-
-	switch (selection)
+	switch (stoi(selection))
 	{
 	case 1:
 		MusteriGirisMenu();
@@ -392,12 +402,40 @@ void MainMenu::GirisMenu()
 	}
 }
 
+bool MainMenu::Selection(string& s, int a) {
+	char ch;
+	ch = _getch();
+	while (ch != 13) //character 13 is enter
+	{
+		if (ch == 8) {
+			if (s.empty() == false)
+			{
+				cout << '\b' << " " << '\b';
+				s.pop_back();
+			}
+			ch = _getch();
+			continue;
+		}
+		s.push_back(ch);
+		cout << ch;
+		ch = _getch();
+	}
+	
+	if (stoi(s) < 1 && stoi(s) > a) {
+		return false;
+	}
+	else {
+		return true;
+	}
+		
+}
+
 
 void MainMenu::MusteriGirisMenu()
 {
 	string kullaniciAdi, sifre, k, s, tel, mail, ad, soyad, adres, dogum, kod;
 	int ctr = 0;
-	int selection;
+	string selection = "0";
 	cls();
 	cout << "Kullanici adinizi giriniz: ";
 	cin >> kullaniciAdi;
@@ -427,8 +465,11 @@ void MainMenu::MusteriGirisMenu()
 	else
 	{
 		std::cout << "\nGiris basarisiz.\n\n[1] Tekrar dene.\n[2] Cikis." << endl;
-		std::cin >> selection;
-		switch (selection)
+		while (!Selection(selection, 2))
+		{
+			Selection(selection, 2);
+		}
+		switch (stoi(selection))
 		{
 		case 1:
 			MusteriGirisMenu();
@@ -502,10 +543,13 @@ void MainMenu::MusteriKayitMenu()
 	cls();
 	cout << "\nKayit basarili, keyifli alisverisler." << endl;
 	txt.close();
-	int selection;
+	string selection = "0";
 	cout << "\n[1] Giris yap.\n" << endl;
-	cin >> selection;
-	switch (selection)
+	while (!Selection(selection, 1))
+	{
+		Selection(selection, 1);
+	}
+	switch (stoi(selection))
 	{
 	case 1:
 		MusteriGirisMenu();
@@ -519,12 +563,15 @@ void MainMenu::MusteriKayitMenu()
 void MainMenu::MusteriMenu()
 {
 	cls();
-	int selection;
+	string selection = "0";
 	cout << "Giris yapmak istediginiz modulu seciniz.\n" << "[1] Kategorileri goster.\n" << "[2] Siparis takip.\n"
 		<< "[3] Sikayet/Oneri.\n" << "[4] Sifre Degistir.\n" << "[5] Cikis \n" << endl;
-	cin >> selection;
+	while (!Selection(selection, 5))
+	{
+		Selection(selection, 5);
+	}
 	cls();
-	switch (selection)
+	switch (stoi(selection))
 	{
 	case 1:
 		KategoriMenu();
@@ -553,13 +600,16 @@ void MainMenu::SikayetOneriMenu() {
 	cin.ignore();
 	getline(cin, mesaj);
 	ofstream txt("sikayet.txt", ios::app);
-	txt << "[Yazan:" << kullanici.getKullaniciAdi() <<  "] " << mesaj << endl;
+	txt << "[Yazan:" << kullanici.getKullaniciAdi() << "] " << mesaj << endl;
 	txt.close();
 	cout << "Mesajiniz basariyla gonderildi.\n" << endl;
-	int selection;
+	string selection = "0";
 	cout << "Bir modul secerek isleminize devam edebilirsiniz.\n\n[1] Menuye don.\n" << endl;
-	cin >> selection;
-	switch (selection)
+	while (!Selection(selection, 1))
+	{
+		Selection(selection, 1);
+	}
+	switch (stoi(selection))
 	{
 	case 1:
 		MusteriMenu();
@@ -636,13 +686,16 @@ void MainMenu::kurye_ekleme()
 
 void MainMenu::YoneticiMenu()
 {
-	int selection;
+	string selection = "0";
 	cls();
 	cout << "Modullerden birini secerek isleminize devam edebilirsiniz." << endl;
 	cout << "\n";
 	cout << "[1] Urun Ekleme.\n" << "[2] Kurye Ekleme.\n" << "[3] Sikayet Oneri Okuma.\n" << "[4] Indirim Kodu Tanimlama.\n" << "[5] Fatura Goruntuleme.\n" << "[6] Cikis.\n" << endl;
-	cin >> selection;
-	switch (selection)
+	while (!Selection(selection, 5))
+	{
+		Selection(selection, 5);
+	}
+	switch (stoi(selection))
 	{
 	case 1:
 		urun_ekleme();
@@ -656,6 +709,9 @@ void MainMenu::YoneticiMenu()
 		kupon_tanimlama();
 	case 5:
 		fatura_goruntuleme();
+	default:
+		YoneticiMenu();
+		break;
 	}
 
 }
@@ -697,103 +753,118 @@ void MainMenu::urun_ekleme()
 		urun_ekleme();
 	}
 
-    if(kategori != "Ayakkabi")
-    {
-        cout << "Urunun Fiyati : " << endl;
-        cin >> fiyat;
-        cout << "Urunun Boyutu : \n [1] S Beden \n [2] M Beden \n [3] L Beden \n [4] XL Beden \n [5] XXL Beden " << endl;
-        cin >> boyut_secim;
-        switch(boyut_secim)
-        {
-        case 1:
-            boyut = "S";
-            break;
-        case 2:
-            boyut = "M";
-            break;
-        case 3:
-            boyut = "L";
-            break;
-        case 4:
-            boyut = "XL";
-            break;
-        case 5:
-            boyut = "XXL";
-            break;
-        default:
-            boyut = "Hata";
-            break;
-        }
+	if (kategori != "Ayakkabi")
+	{
+		cout << "Urunun Fiyati : " << endl;
+		cin >> fiyat;
+		cout << "Urunun Boyutu : \n [1] S Beden \n [2] M Beden \n [3] L Beden \n [4] XL Beden \n [5] XXL Beden " << endl;
+		cin >> boyut_secim;
+		switch (boyut_secim)
+		{
+		case 1:
+			boyut = "S";
+			break;
+		case 2:
+			boyut = "M";
+			break;
+		case 3:
+			boyut = "L";
+			break;
+		case 4:
+			boyut = "XL";
+			break;
+		case 5:
+			boyut = "XXL";
+			break;
+		default:
+			boyut = "Hata";
+			break;
+		}
 
-        cout << "Urunun Rengi : " << endl;
-        cout << " [1] Mavi \n [2] Kirmizi \n [3] Siyah \n [4] Beyaz \n [5] Yesil " << endl;
-        cin >> renk_secim;
-        switch(renk_secim)
-        {
-        case 1:
-            renk = "Mavi";
-            break;
-        case 2:
-            renk = "Kirmizi";
-            break;
-        case 3:
-            renk = "Siyah";
-            break;
-        case 4:
-            renk = "Beyaz";
-            break;
-        case 5:
-            renk = "Yesil";
-            break;
-        default:
-            renk = "Hata";
-            break;
-        }
-        urunler << isim << " " << kategori << " " << fiyat << " " << boyut << " " << renk << "\n";
-    }
-    else if(kategori == "Ayakkabi")
-    {
-        cout << "Urunun Fiyati : " << endl;
-        cin >> fiyat;
-        cout << "Urunun Numarasi : " << endl;
-        cin >> boyut_secim;
-        while(boyut_secim < 30 || boyut_secim > 46)
-        {
-            cout << "Lutfen Gecerli Bir Sayi Giriniz." << endl;
-            cin >> boyut_secim;
-        }
-        cout << "Urunun Rengi : " << endl;
-        cout << " [1] Mavi \n [2] Kirmizi \n [3] Siyah \n [4] Beyaz \n [5] Yesil " << endl;
-        cin >> renk_secim;
-        switch(renk_secim)
-        {
-        case 1:
-            renk = "Mavi";
-            break;
-        case 2:
-            renk = "Kirmizi";
-            break;
-        case 3:
-            renk = "Siyah";
-            break;
-        case 4:
-            renk = "Beyaz";
-            break;
-        case 5:
-            renk = "Yesil";
-            break;
-        default:
-            renk = "Hata";
-            break;
-        }
-        urunler << isim << " " << kategori << " " << fiyat << " " << boyut_secim << " " << renk << "\n";
-    }
-    else
-        cout << "Hata!" << endl;
+		cout << "Urunun Rengi : " << endl;
+		cout << " [1] Mavi \n [2] Kirmizi \n [3] Siyah \n [4] Beyaz \n [5] Yesil " << endl;
+		cin >> renk_secim;
+		switch (renk_secim)
+		{
+		case 1:
+			renk = "Mavi";
+			break;
+		case 2:
+			renk = "Kirmizi";
+			break;
+		case 3:
+			renk = "Siyah";
+			break;
+		case 4:
+			renk = "Beyaz";
+			break;
+		case 5:
+			renk = "Yesil";
+			break;
+		default:
+			renk = "Hata";
+			break;
+		}
+		urunler << isim << " " << kategori << " " << fiyat << " " << boyut << " " << renk << "\n";
+	}
+	else if (kategori == "Ayakkabi")
+	{
+		cout << "Urunun Fiyati : " << endl;
+		cin >> fiyat;
+		cout << "Urunun Numarasi : " << endl;
+		cin >> boyut_secim;
+		while (boyut_secim < 30 || boyut_secim > 46)
+		{
+			cout << "Lutfen Gecerli Bir Sayi Giriniz." << endl;
+			cin >> boyut_secim;
+		}
+		cout << "Urunun Rengi : " << endl;
+		cout << " [1] Mavi \n [2] Kirmizi \n [3] Siyah \n [4] Beyaz \n [5] Yesil " << endl;
+		cin >> renk_secim;
+		switch (renk_secim)
+		{
+		case 1:
+			renk = "Mavi";
+			break;
+		case 2:
+			renk = "Kirmizi";
+			break;
+		case 3:
+			renk = "Siyah";
+			break;
+		case 4:
+			renk = "Beyaz";
+			break;
+		case 5:
+			renk = "Yesil";
+			break;
+		default:
+			renk = "Hata";
+			break;
+		}
+		urunler << isim << " " << kategori << " " << fiyat << " " << boyut_secim << " " << renk << "\n";
+	}
+	else
+		cout << "Hata!" << endl;
 
 	urunler.close();
 	cout << "Basariyla Eklendi..." << endl;
-	YoneticiMenu();
+	cout << "Bir modul secerek isleminize devam edebilirsiniz." << endl;
+	cout << "[1] Menuye Don\n" << endl;
+	
+	string selection = "0";
+	while (!Selection(selection, 1)) {
+		Selection(selection, 1);
+	}
+
+	switch (stoi(selection))
+	{
+	case 1:
+		YoneticiMenu();
+		break;
+	default:
+		break;
+	}
 }
 
 
@@ -807,11 +878,14 @@ void MainMenu::sikayet_okuma()
 	{
 		cout << "[" << ++index << "] " << text << endl;
 	}
-	int select;
+	string selection = "0";
 	cout << "\n\nBir modul secerek isleminize devam edebilirsiniz.\n" << endl;
 	cout << "[1] Menuye don." << endl;
-	cin >> select;
-	switch (select)
+	while (!Selection(selection, 1))
+	{
+		Selection(selection, 1);
+	}
+	switch (stoi(selection))
 	{
 	case 1:
 		YoneticiMenu();
@@ -955,12 +1029,17 @@ bool MainMenu::DateVerification(string date)
 
 void MainMenu::KategoriMenu() {
 	cls();
-	int selection;
+	string selection = "0";
 	cout << "Kategorilerden birini secerek isleminize devam edebilirsiniz." << endl;
 	cout << "\n";
 	cout << "[1] Elbise.\n" << "[2] Tisort.\n" << "[3] Pantolon.\n" << "[4] Gomlek.\n" << "[5] Etek.\n" << "[6] Ayakkabi.\n" << "[7] Geri Don.\n" << endl;
-	cin >> selection;
-	switch (selection)
+	
+	while (!Selection(selection, 7))
+	{
+		Selection(selection, 7);
+	}
+	
+	switch (stoi(selection))
 	{
 	case 1:
 		UrunSecimMenu("Elbise");
@@ -991,7 +1070,7 @@ void MainMenu::KategoriMenu() {
 
 void MainMenu::UrunSecimMenu(string kategori) {
 	cls();
-	int selection;
+	string selection = "0";
 	string kategoria, fiyat, boyut, renk, isim;
 	cout << "Bir " << kategori << " secerek isleminize devam edebilirsiniz." << endl;
 	cout << "Su anki sepet tutariniz: " << SepetFiyati() << "TL" << endl;
@@ -1004,7 +1083,7 @@ void MainMenu::UrunSecimMenu(string kategori) {
 	{
 		//cout << "[" << index << "]" << fiyat << "TL " << boyut << "Beden " << renk << endl;
 		if (kategoria == kategori) {
-            kiyafet[index].setIsim(isim);
+			kiyafet[index].setIsim(isim);
 			kiyafet[index].setKategori(kategoria);
 			kiyafet[index].setFiyat(stoi(fiyat));
 			kiyafet[index].setBoyut(boyut);
@@ -1016,9 +1095,14 @@ void MainMenu::UrunSecimMenu(string kategori) {
 	uruntxt.close();
 	if (index == 0) {
 		cout << "Bu kategoride hic urun yok." << endl;
-		cout << "[1] Kategori Secimine Don\n" << "[2] Ana Menuye Don\n" << endl;
-		cin >> selection;
-		switch (selection)
+		cout << "[1] Kategori Secimine Don\n" << "[2] Menuye Don\n" << endl;
+		
+		while (!Selection(selection, 2))
+		{
+			Selection(selection, 2);
+		}
+		
+		switch (stoi(selection))
 		{
 		case 1:
 			KategoriMenu();
@@ -1033,15 +1117,22 @@ void MainMenu::UrunSecimMenu(string kategori) {
 	}
 	else {
 		cout << "\n";
-		cin >> selection;
-		sepet[sepetBoyutu] = kiyafet[selection - 1];
+		while (!Selection(selection, index))
+		{
+			Selection(selection, index);
+		}
+		sepet[sepetBoyutu] = kiyafet[stoi(selection) - 1];
 		sepetBoyutu++;
 		cls();
 		cout << "Urununuz sepete eklendi. Anlik sepet tutari: " << SepetFiyati() << "TL\n" << endl;
 		cout << "Devam etmek icin bir islem seciniz." << endl;
 		cout << "[1] Alisverise devam et.\n[2] Alisverisi bitir.\n" << endl;
-		cin >> selection;
-		switch (selection)
+		
+		while (!Selection(selection, 2))
+		{
+			Selection(selection, 2);
+		}
+		switch (stoi(selection))
 		{
 		case 1:
 			KategoriMenu();
@@ -1067,38 +1158,38 @@ int MainMenu::SepetFiyati() {
 
 void MainMenu::AlisverisiBitir() {
 	cls();
-	int selection;
+	string selection = "0";
 	string ilce;
-    if(kullanici.getAdresIlce() == "1")
-    {
-        ilce = "Ortahisar";
-    }
-    else if(kullanici.getAdresIlce() == "2")
-    {
-        ilce = "Akcaabat";
-    }
-    else if(kullanici.getAdresIlce() == "3")
-    {
-        ilce = "Vakfikebir";
-    }
-    else if(kullanici.getAdresIlce() == "4")
-    {
-        ilce = "Besikduzu";
-    }
-    else if(kullanici.getAdresIlce() == "5")
-    {
-        ilce = "Yomra";
-    }
-    else if(kullanici.getAdresIlce() == "6")
-    {
-        ilce = "Arsin";
-    }
-    else if(kullanici.getAdresIlce() == "7")
-    {
-        ilce = "Arakli";
-    }
-    else
-        ilce = "Hata!";
+	if (kullanici.getAdresIlce() == "1")
+	{
+		ilce = "Ortahisar";
+	}
+	else if (kullanici.getAdresIlce() == "2")
+	{
+		ilce = "Akcaabat";
+	}
+	else if (kullanici.getAdresIlce() == "3")
+	{
+		ilce = "Vakfikebir";
+	}
+	else if (kullanici.getAdresIlce() == "4")
+	{
+		ilce = "Besikduzu";
+	}
+	else if (kullanici.getAdresIlce() == "5")
+	{
+		ilce = "Yomra";
+	}
+	else if (kullanici.getAdresIlce() == "6")
+	{
+		ilce = "Arsin";
+	}
+	else if (kullanici.getAdresIlce() == "7")
+	{
+		ilce = "Arakli";
+	}
+	else
+		ilce = "Hata!";
 	cout << "Satin aldiginiz urunler: " << endl;
 	for (int i = 0; i < sepetBoyutu; i++)
 		cout << "\t" << sepet[i].getIsim() << " " << sepet[i].getKategori() << " " << sepet[i].getBoyut() << "Beden " << sepet[i].getRenk() << " " << sepet[i].getFiyat() << "TL" << endl;
@@ -1117,8 +1208,13 @@ void MainMenu::AlisverisiBitir() {
 	sepetBoyutu = 0;
 	cout << "Bir modul secerek isleminize devam edebilirsiniz.\n" << endl;
 	cout << "[1] Menuye Don\n" << endl;
-	cin >> selection;
-	switch (selection)
+	
+	while (!Selection(selection, 1))
+	{
+		Selection(selection, 1);
+	}
+	
+	switch (stoi(selection))
 	{
 	case 1:
 		MusteriMenu();
@@ -1132,7 +1228,7 @@ void MainMenu::AlisverisiBitir() {
 
 void MainMenu::SiparisTakipMenu() {
 	cls();
-	int selection;
+	string selection = "0";
 	cout << "Siparisleriniz: \n" << endl;
 	ifstream faturatxt("fatura.txt");
 	string text;
@@ -1143,7 +1239,7 @@ void MainMenu::SiparisTakipMenu() {
 		auto pos = text.find("Alisverisi yapan: " + kullanici.getKullaniciAdi() + "\\");
 		//cout << pos << endl;
 		if (pos == 0) {
-			cout << "[" << index+1 << "]" << endl;
+			cout << "[" << index + 1 << "]" << endl;
 			size_t position;
 			while ((position = text.find("\\n")) != std::string::npos) {
 				text.replace(position, 2, "\n");
@@ -1158,8 +1254,13 @@ void MainMenu::SiparisTakipMenu() {
 	faturatxt.close();
 	cout << "\n";
 	cout << "Bir modul secerek isleminize devam edebilirsiniz.\n[1] Ana Menuye Don\n" << endl;
-	cin >> selection;
-	switch (selection)
+	
+	while (!Selection(selection, 1))
+	{
+		Selection(selection, 1);
+	}
+	
+	switch (stoi(selection))
 	{
 	case 1:
 		MusteriMenu();
@@ -1173,7 +1274,7 @@ void MainMenu::SiparisTakipMenu() {
 
 void MainMenu::fatura_goruntuleme() {
 	cls();
-	int selection;
+	string selection = "0";
 	cout << "Siparisler: \n" << endl;
 	ifstream faturatxt("fatura.txt");
 	string text;
@@ -1181,7 +1282,7 @@ void MainMenu::fatura_goruntuleme() {
 
 	while (getline(faturatxt, text))
 	{
-		cout << "[" << index+1 << "]" << endl;
+		cout << "[" << index + 1 << "]" << endl;
 		size_t position;
 		while ((position = text.find("\\n")) != std::string::npos) {
 			text.replace(position, 2, "\n");
@@ -1196,8 +1297,12 @@ void MainMenu::fatura_goruntuleme() {
 	cout << "\n";
 	cout << "Bir modul secerek isleminize devam edebilirsiniz" << endl;
 	cout << "[1] Menuye Don\n" << endl;
-	cin >> selection;
-	switch (selection)
+
+	while (!Selection(selection, 1))
+	{
+		Selection(selection, 1);
+	}
+	switch (stoi(selection))
 	{
 	case 1:
 		YoneticiMenu();
@@ -1361,7 +1466,7 @@ void MainMenu::SifreDegistirMenu() {
 	cout << "Yeni sifrenizi giriniz: ";
 	cin >> ys;
 	string k, s, ad, soyad, dt, adres, tel, mail, kod;
-	int selection;
+	string selection = "0";
 	while (in >> k >> s >> ad >> soyad >> dt >> adres >> tel >> mail >> kod)
 	{
 		if (k == kullanici.getKullaniciAdi()) {
@@ -1380,8 +1485,12 @@ void MainMenu::SifreDegistirMenu() {
 	cout << "Sifreniz basariyla degistirildi.\n" << endl;
 	cout << "Bir modul secerek isleminize devam edebilirsiniz." << endl;
 	cout << "[1] Menuye Don\n" << endl;
-	cin >> selection;
-	switch (selection)
+
+	while (!Selection(selection, 1))
+	{
+		Selection(selection, 1);
+	}
+	switch (stoi(selection))
 	{
 	case 1:
 		MusteriMenu();

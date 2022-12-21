@@ -1135,6 +1135,11 @@ void MainMenu::UrunSecimMenu(string kategori) {
 		{
 			//cout << "[" << index << "]" << fiyat << "TL " << boyut << "Beden " << renk << endl;
 			if (yisim == isim) {
+				kiyafet[index].setIsim(isim);
+				kiyafet[index].setKategori(kategoria);
+				kiyafet[index].setFiyat(stoi(fiyat));
+				kiyafet[index].setBoyut(boyut);
+				kiyafet[index].setRenk(renk);
 				index++;
 				cout << "[" << index << "] " << boyut << endl;
 			}

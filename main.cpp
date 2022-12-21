@@ -62,6 +62,7 @@ private:
 	int saat, dakika;
 };
 
+
 ostream& operator << (ostream& out, Zaman zaman)
 {
 	out << zaman.getSaat() << ":";
@@ -71,7 +72,6 @@ ostream& operator << (ostream& out, Zaman zaman)
 		out << zaman.getDakika();
 	return out;
 }
-
 
 
 class Kisi
@@ -116,6 +116,10 @@ public:
 	string getRenk() {
 		return renk;
 	}
+	string getIsim()
+	{
+        return isim;
+	}
 	double getFiyat() {
 		return fiyat;
 	}
@@ -135,15 +139,19 @@ public:
 	void setFiyat(double a) {
 		fiyat = a;
 	}
+	void setIsim(string a)
+	{
+	    isim = a;
+	}
 
 
 	ostream& operator<<(ostream& os) {
-		os << getKategori() << " " << getBoyut() << "Beden " << getRenk() << " " << getFiyat() << "TL" << endl;
+		os << getIsim() << " " << getKategori() << " " << getBoyut() << "Beden " << getRenk() << " " << getFiyat() << "TL" << endl;
 		return os;
 	}
 
 private:
-	string kategori, kiyafet_adi, boyut, renk;
+	string kategori, kiyafet_adi, boyut, renk, isim;
 	double fiyat;
 };
 
@@ -233,6 +241,7 @@ private:
 	string kullanici_adi, eposta, adres_ilce, sifre, indirim_kodu, dtarihi;
 };
 
+
 class Kurye : public Kisi
 {
 public:
@@ -255,6 +264,7 @@ private:
 	Zaman dagitim_bitisler;
 	int siparisnumralari;
 };
+
 
 class MainMenu
 {
@@ -295,7 +305,6 @@ public:
 private:
 
 };
-
 
 
 class Yonetici
@@ -560,6 +569,7 @@ void MainMenu::SikayetOneriMenu() {
 	}
 }
 
+
 void MainMenu::YoneticiGirisMenu()
 {
 	cls();
@@ -655,11 +665,13 @@ void MainMenu::urun_ekleme()
 {
 	cls();
 	ofstream urunler("urunler.txt", ios::app);
-	string kategori, fiyat, boyut, renk;
-	int kategori_secim;
+	string kategori, fiyat, boyut, renk, isim;
+	int kategori_secim, renk_secim, boyut_secim;
 	//elbise, tisort, pantolon, gomlek, etek, ayakkabi, kategori_secim;
 	cout << "Urunun Kategorisi : \n [1] Elbise \n [2] Tisort \n [3] Pantolon \n [4] Gomlek \n [5] Etek \n [6] Ayakkabi" << endl;
 	cin >> kategori_secim;
+	cout << "Urunun Ismi : " << endl;
+	cin >> isim;
 	switch (kategori_secim)
 	{
 	case 1:
@@ -684,13 +696,100 @@ void MainMenu::urun_ekleme()
 		cout << "Lutfen gecerli bir kategori secin." << endl;
 		urun_ekleme();
 	}
-	cout << "Urunun Fiyati : " << endl;
-	cin >> fiyat;
-	cout << "Urunun Boyutu : " << endl;
-	cin >> boyut;
-	cout << "Urunun Rengi : " << endl;
-	cin >> renk;
-	urunler << kategori << " " << fiyat << " " << boyut << " " << renk << "\n";
+
+    if(kategori != "Ayakkabi")
+    {
+        cout << "Urunun Fiyati : " << endl;
+        cin >> fiyat;
+        cout << "Urunun Boyutu : \n [1] S Beden \n [2] M Beden \n [3] L Beden \n [4] XL Beden \n [5] XXL Beden " << endl;
+        cin >> boyut_secim;
+        switch(boyut_secim)
+        {
+        case 1:
+            boyut = "S";
+            break;
+        case 2:
+            boyut = "M";
+            break;
+        case 3:
+            boyut = "L";
+            break;
+        case 4:
+            boyut = "XL";
+            break;
+        case 5:
+            boyut = "XXL";
+            break;
+        default:
+            boyut = "Hata";
+            break;
+        }
+
+        cout << "Urunun Rengi : " << endl;
+        cout << " [1] Mavi \n [2] Kirmizi \n [3] Siyah \n [4] Beyaz \n [5] Yesil " << endl;
+        cin >> renk_secim;
+        switch(renk_secim)
+        {
+        case 1:
+            renk = "Mavi";
+            break;
+        case 2:
+            renk = "Kirmizi";
+            break;
+        case 3:
+            renk = "Siyah";
+            break;
+        case 4:
+            renk = "Beyaz";
+            break;
+        case 5:
+            renk = "Yesil";
+            break;
+        default:
+            renk = "Hata";
+            break;
+        }
+        urunler << isim << " " << kategori << " " << fiyat << " " << boyut << " " << renk << "\n";
+    }
+    else if(kategori == "Ayakkabi")
+    {
+        cout << "Urunun Fiyati : " << endl;
+        cin >> fiyat;
+        cout << "Urunun Numarasi : " << endl;
+        cin >> boyut_secim;
+        while(boyut_secim < 30 || boyut_secim > 46)
+        {
+            cout << "Lutfen Gecerli Bir Sayi Giriniz." << endl;
+            cin >> boyut_secim;
+        }
+        cout << "Urunun Rengi : " << endl;
+        cout << " [1] Mavi \n [2] Kirmizi \n [3] Siyah \n [4] Beyaz \n [5] Yesil " << endl;
+        cin >> renk_secim;
+        switch(renk_secim)
+        {
+        case 1:
+            renk = "Mavi";
+            break;
+        case 2:
+            renk = "Kirmizi";
+            break;
+        case 3:
+            renk = "Siyah";
+            break;
+        case 4:
+            renk = "Beyaz";
+            break;
+        case 5:
+            renk = "Yesil";
+            break;
+        default:
+            renk = "Hata";
+            break;
+        }
+        urunler << isim << " " << kategori << " " << fiyat << " " << boyut_secim << " " << renk << "\n";
+    }
+    else
+        cout << "Hata!" << endl;
 
 	urunler.close();
 	cout << "Basariyla Eklendi..." << endl;
@@ -753,7 +852,8 @@ void MainMenu::kupon_tanimlama()
 }
 
 
-bool MainMenu::MailVerification(string mail) {
+bool MainMenu::MailVerification(string mail)
+{
 	if (mail.find("@") != string::npos && (mail.find(".com") != string::npos || mail.find(".net") != string::npos || mail.find(".org") != string::npos))
 	{
 		return true;
@@ -763,6 +863,7 @@ bool MainMenu::MailVerification(string mail) {
 		return false;
 	}
 }
+
 
 void MainMenu::PasswordMasking(string& password)
 {
@@ -784,6 +885,7 @@ void MainMenu::PasswordMasking(string& password)
 		ch = _getch();
 	}
 }
+
 
 bool MainMenu::PasswordVerification(string password)
 {
@@ -820,7 +922,7 @@ bool MainMenu::PasswordVerification(string password)
 	}
 }
 
-//date format controller function
+
 bool MainMenu::DateVerification(string date)
 {
 	if (date.length() != 10)
@@ -890,7 +992,7 @@ void MainMenu::KategoriMenu() {
 void MainMenu::UrunSecimMenu(string kategori) {
 	cls();
 	int selection;
-	string kategoria, fiyat, boyut, renk;
+	string kategoria, fiyat, boyut, renk, isim;
 	cout << "Bir " << kategori << " secerek isleminize devam edebilirsiniz." << endl;
 	cout << "Su anki sepet tutariniz: " << SepetFiyati() << "TL" << endl;
 	cout << "\n";
@@ -898,16 +1000,17 @@ void MainMenu::UrunSecimMenu(string kategori) {
 	string text;
 	int index = 0;
 	Kiyafet kiyafet[10] = { Kiyafet() };
-	while (uruntxt >> kategoria >> fiyat >> boyut >> renk)
+	while (uruntxt >> isim >> kategoria >> fiyat >> boyut >> renk)
 	{
 		//cout << "[" << index << "]" << fiyat << "TL " << boyut << "Beden " << renk << endl;
 		if (kategoria == kategori) {
+            kiyafet[index].setIsim(isim);
 			kiyafet[index].setKategori(kategoria);
 			kiyafet[index].setFiyat(stoi(fiyat));
 			kiyafet[index].setBoyut(boyut);
 			kiyafet[index].setRenk(renk);
 			index++;
-			cout << "[" << index << "] " << boyut << "Beden " << renk << " " << fiyat << "TL " << endl;
+			cout << "[" << index << "] " << isim << " " << boyut << " Beden " << renk << " " << fiyat << "TL " << endl;
 		}
 	}
 	uruntxt.close();
@@ -998,7 +1101,7 @@ void MainMenu::AlisverisiBitir() {
         ilce = "Hata!";
 	cout << "Satin aldiginiz urunler: " << endl;
 	for (int i = 0; i < sepetBoyutu; i++)
-		cout << "\t" << sepet[i].getKategori() << " " << sepet[i].getBoyut() << "Beden " << sepet[i].getRenk() << " " << sepet[i].getFiyat() << "TL" << endl;
+		cout << "\t" << sepet[i].getIsim() << " " << sepet[i].getKategori() << " " << sepet[i].getBoyut() << "Beden " << sepet[i].getRenk() << " " << sepet[i].getFiyat() << "TL" << endl;
 	cout << "Toplam tutar: " << SepetFiyati() << "TL" << endl;
 	cout << "Urunlerin gonderilecegi adres: " << ilce << endl;
 	ofstream faturatxt("fatura.txt", ios::app);
@@ -1006,7 +1109,7 @@ void MainMenu::AlisverisiBitir() {
 	auto kurye = kurye_gonderme();
 	auto zaman = kurye.getDagitimBitisler();
 	for (int i = 0; i < sepetBoyutu; i++) {
-		urunler += "\\t" + sepet[i].getKategori() + " " + sepet[i].getBoyut() + "Beden " + sepet[i].getRenk() + " " + to_string(sepet[i].getFiyat()) + "TL\\n";
+		urunler += "\\t" + sepet[i].getIsim() + " " + sepet[i].getKategori() + " " + sepet[i].getBoyut() + "Beden " + sepet[i].getRenk() + " " + to_string(sepet[i].getFiyat()) + "TL\\n";
 	}
 
 	faturatxt << "Alisverisi yapan: " << kullanici.getKullaniciAdi() << "\\nAlinan urunler: \\n" << urunler << "Gonderilecek adres: " << kullanici.getAdresIlce() << " Toplam fiyat: " << SepetFiyati() << "\\n" << "Gonderilen kurye: \\n\\t " << kurye.getAd() << " " << kurye.getSoyad() << "\\n\\t" << "Telefon numarasi: " << kurye.getTelNo() << "\\n\\t" << "Teslim saati: " << zaman << "\\n\\n" << endl;
@@ -1103,6 +1206,7 @@ void MainMenu::fatura_goruntuleme() {
 		break;
 	}
 }
+
 
 Kurye MainMenu::kurye_gonderme()
 {

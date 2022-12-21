@@ -691,9 +691,9 @@ void MainMenu::YoneticiMenu()
 	cout << "Modullerden birini secerek isleminize devam edebilirsiniz." << endl;
 	cout << "\n";
 	cout << "[1] Urun Ekleme.\n" << "[2] Kurye Ekleme.\n" << "[3] Sikayet Oneri Okuma.\n" << "[4] Indirim Kodu Tanimlama.\n" << "[5] Fatura Goruntuleme.\n" << "[6] Cikis.\n" << endl;
-	while (!Selection(selection, 5))
+	while (!Selection(selection, 6))
 	{
-		Selection(selection, 5);
+		Selection(selection, 6);
 	}
 	switch (stoi(selection))
 	{
@@ -1078,7 +1078,7 @@ void MainMenu::UrunSecimMenu(string kategori) {
 	ifstream uruntxt("urunler.txt");
 	string text;
 	int index = 0;
-	Kiyafet kiyafet[10] = { Kiyafet() };
+	Kiyafet kiyafet[100] = { Kiyafet() };
 	while (uruntxt >> isim >> kategoria >> fiyat >> boyut >> renk)
 	{
 		//cout << "[" << index << "]" << fiyat << "TL " << boyut << "Beden " << renk << endl;
@@ -1089,7 +1089,7 @@ void MainMenu::UrunSecimMenu(string kategori) {
 			kiyafet[index].setBoyut(boyut);
 			kiyafet[index].setRenk(renk);
 			index++;
-			cout << "[" << index << "] " << isim << " " << boyut << " Beden " << renk << " " << fiyat << "TL " << endl;
+			cout << "[" << index << "] " << isim << endl;
 		}
 	}
 	uruntxt.close();
@@ -1116,11 +1116,118 @@ void MainMenu::UrunSecimMenu(string kategori) {
 		}
 	}
 	else {
+		int a;
 		cout << "\n";
+
+		selection = "0";
 		while (!Selection(selection, index))
 		{
 			Selection(selection, index);
 		}
+
+		a = stoi(selection);
+		string yisim = kiyafet[a - 1].getIsim();
+		cout << "\nBeden seciniz: " << endl;
+		index = 0;
+
+		ifstream uruntxt2("urunler.txt");
+		while (uruntxt2 >> isim >> kategoria >> fiyat >> boyut >> renk)
+		{
+			//cout << "[" << index << "]" << fiyat << "TL " << boyut << "Beden " << renk << endl;
+			if (yisim == isim) {
+				index++;
+				cout << "[" << index << "] " << boyut << endl;
+			}
+		}
+		cout << "[" << index + 1 << "] Menuye Don." << endl;
+		uruntxt2.close();
+		selection = "0";
+		while (!Selection(selection, index+1))
+		{
+			Selection(selection, index);
+		}
+		
+		a = stoi(selection);
+		
+		if (a == index + 1) KategoriMenu();
+		
+		string yboyut = kiyafet[a - 1].getBoyut();
+
+		cout << "\nRenk seciniz: " << endl;
+		index = 0;
+		ifstream uruntxt3("urunler.txt");
+
+		bool mavi = false, kirmizi = false, siyah = false, beyaz = false, yesil = false;
+		while (uruntxt3 >> isim >> kategoria >> fiyat >> boyut >> renk)
+		{
+			//cout << "[" << index << "]" << fiyat << "TL " << boyut << "Beden " << renk << endl;
+			if (yisim == isim && yboyut == boyut) {
+				if (renk == "Mavi" && !mavi) {
+					kiyafet[index].setIsim(isim);
+					kiyafet[index].setKategori(kategoria);
+					kiyafet[index].setFiyat(stoi(fiyat));
+					kiyafet[index].setBoyut(boyut);
+					kiyafet[index].setRenk(renk);
+					index++;
+					cout << "[" << index << "] " << renk << endl;
+					mavi = true;
+				}
+				else if (renk == "Kirmizi" && !kirmizi) {
+					kiyafet[index].setIsim(isim);
+					kiyafet[index].setKategori(kategoria);
+					kiyafet[index].setFiyat(stoi(fiyat));
+					kiyafet[index].setBoyut(boyut);
+					kiyafet[index].setRenk(renk);
+					index++;
+					cout << "[" << index << "] " << renk << endl;
+					kirmizi = true;
+				}
+				else if (renk == "Siyah" && !siyah) {
+					kiyafet[index].setIsim(isim);
+					kiyafet[index].setKategori(kategoria);
+					kiyafet[index].setFiyat(stoi(fiyat));
+					kiyafet[index].setBoyut(boyut);
+					kiyafet[index].setRenk(renk);
+					index++;
+					cout << "[" << index << "] " << renk << endl;
+					siyah = true;
+				}
+				else if (renk == "Beyaz" && !beyaz) {
+					kiyafet[index].setIsim(isim);
+					kiyafet[index].setKategori(kategoria);
+					kiyafet[index].setFiyat(stoi(fiyat));
+					kiyafet[index].setBoyut(boyut);
+					kiyafet[index].setRenk(renk);
+					index++;
+					cout << "[" << index << "] " << renk << endl;
+					beyaz = true;
+				}
+				else if (renk == "Yesil" && !yesil) {
+					kiyafet[index].setIsim(isim);
+					kiyafet[index].setKategori(kategoria);
+					kiyafet[index].setFiyat(stoi(fiyat));
+					kiyafet[index].setBoyut(boyut);
+					kiyafet[index].setRenk(renk);
+					index++;
+					cout << "[" << index << "] " << renk << endl;
+					yesil = true;
+				}
+			}
+		}
+
+		cout << "[" << index + 1 << "] Menuye Don." << endl;
+		
+		uruntxt3.close();
+		selection = "0";
+		while (!Selection(selection, index))
+		{
+			Selection(selection, index);
+		}
+		
+
+		a = stoi(selection);
+		if (a == index + 1) KategoriMenu();
+		
 		sepet[sepetBoyutu] = kiyafet[stoi(selection) - 1];
 		sepetBoyutu++;
 		cls();
@@ -1128,6 +1235,7 @@ void MainMenu::UrunSecimMenu(string kategori) {
 		cout << "Devam etmek icin bir islem seciniz." << endl;
 		cout << "[1] Alisverise devam et.\n[2] Alisverisi bitir.\n" << endl;
 		
+		selection = "0";
 		while (!Selection(selection, 2))
 		{
 			Selection(selection, 2);

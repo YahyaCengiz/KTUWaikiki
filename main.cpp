@@ -1079,8 +1079,11 @@ void MainMenu::UrunSecimMenu(string kategori) {
 	string text;
 	int index = 0;
 	Kiyafet kiyafet[100] = { Kiyafet() };
+	string isimler;
+	bool yazdirisim = true;
 	while (uruntxt >> isim >> kategoria >> fiyat >> boyut >> renk)
 	{
+		yazdirisim = true;
 		//cout << "[" << index << "]" << fiyat << "TL " << boyut << "Beden " << renk << endl;
 		if (kategoria == kategori) {
 			kiyafet[index].setIsim(isim);
@@ -1089,7 +1092,15 @@ void MainMenu::UrunSecimMenu(string kategori) {
 			kiyafet[index].setBoyut(boyut);
 			kiyafet[index].setRenk(renk);
 			index++;
-			cout << "[" << index << "] " << isim << endl;
+
+			if (isimler.find(isim) != std::string::npos) {
+				yazdirisim = false;
+			}
+			if (yazdirisim) {
+				isimler += isim;
+				cout << "[" << index << "] " << isim << endl;
+			}
+			
 		}
 	}
 	uruntxt.close();
@@ -1129,10 +1140,13 @@ void MainMenu::UrunSecimMenu(string kategori) {
 		string yisim = kiyafet[a - 1].getIsim();
 		cout << "\nBeden seciniz: " << endl;
 		index = 0;
-
 		ifstream uruntxt2("urunler.txt");
+
+		string boyutlar;
+		bool yazdirboyutlar = true;
 		while (uruntxt2 >> isim >> kategoria >> fiyat >> boyut >> renk)
 		{
+			yazdirboyutlar = true;
 			//cout << "[" << index << "]" << fiyat << "TL " << boyut << "Beden " << renk << endl;
 			if (yisim == isim) {
 				kiyafet[index].setIsim(isim);
@@ -1141,7 +1155,16 @@ void MainMenu::UrunSecimMenu(string kategori) {
 				kiyafet[index].setBoyut(boyut);
 				kiyafet[index].setRenk(renk);
 				index++;
-				cout << "[" << index << "] " << boyut << endl;
+				
+				if (boyutlar.find(boyut) != std::string::npos) {
+					yazdirboyutlar = false;
+				}
+				
+				if (yazdirboyutlar) {
+					boyutlar += " " + boyut;
+					cout << "[" << index << "] " << boyut << endl;
+				}
+
 			}
 		}
 		cout << "[" << index + 1 << "] Menuye Don." << endl;

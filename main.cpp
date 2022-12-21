@@ -1142,7 +1142,7 @@ void MainMenu::UrunSecimMenu(string kategori) {
 		index = 0;
 		ifstream uruntxt2("urunler.txt");
 
-		string boyutlar;
+		string boyutlar = " ";
 		bool yazdirboyutlar = true;
 		while (uruntxt2 >> isim >> kategoria >> fiyat >> boyut >> renk)
 		{
@@ -1156,12 +1156,12 @@ void MainMenu::UrunSecimMenu(string kategori) {
 				kiyafet[index].setRenk(renk);
 				index++;
 				
-				if (boyutlar.find(boyut) != std::string::npos) {
+				if (boyutlar.find(" " + boyut + " ") != std::string::npos) {
 					yazdirboyutlar = false;
 				}
 				
 				if (yazdirboyutlar) {
-					boyutlar += " " + boyut;
+					boyutlar += " " + boyut + " ";
 					cout << "[" << index << "] " << boyut << endl;
 				}
 

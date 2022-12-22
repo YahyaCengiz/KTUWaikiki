@@ -308,13 +308,22 @@ private:
 };
 
 
-class Yonetici
+class Yonetici : public Kisi
 {
 public:
+	string ad = "-";
+	string soyad = "-";
+	string dogum = "-";
+	string adres = "-";
+	string tel = "-";
+	string mail = "-";
+	string kod = "-";
 	Yonetici(string s, string y = "admin")
 	{
 		yoneticiAdi = y;
 		sifre = s;
+		setAd(ad);
+		setSoyad(soyad);
 	}
 	string getYoneticiAdi()
 	{
@@ -324,14 +333,7 @@ public:
 	{
 		return sifre;
 	}
-	string ad = "-";
-	string soyad = "-";
-	string dogum = "-";
-	string adres = "-";
-	string tel = "-";
-	string mail = "-";
-	string kod = "-";
-
+	
 private:
 	string sifre;
 	string yoneticiAdi;
@@ -485,7 +487,7 @@ void MainMenu::MusteriGirisMenu()
 void MainMenu::MusteriKayitMenu()
 {
 	//değerler müşteri classına geçirilecek
-	string ad, soyad, telNo, kullaniciAdi, sifre, mail, dogumTarihi, kod = "0";
+	string ad, soyad, telNo, kullaniciAdi, sifre, mail, dogumTarihi, kod = "0000000";
 	int adres;
 
 	cls();
@@ -626,7 +628,7 @@ void MainMenu::YoneticiGirisMenu()
 	Yonetici yonetici("password");
 	string yoneticiSifre, y, s, ad, soyad, dogum, adres, tel, mail, kod;
 	int ctr = 0;
-	fstream txt("kullanici.txt", ios::in);
+	ifstream txt("kullanici.txt", ios::in);
 
 	cout << "Yonetici sifresini giriniz." << endl;
 	PasswordMasking(yoneticiSifre);
@@ -637,14 +639,14 @@ void MainMenu::YoneticiGirisMenu()
 		}
 	}
 	txt.close();
-	txt.open("kullanici.txt", ios::app);
+	fstream txt2("kullanici.txt", ios::app);
 	if (ctr == 1 && yoneticiSifre == "password") {
 		cout << "Giris Yapildi..." << endl;
 		YoneticiMenu();
 	}
 	else {
-		txt << "admin" << " " << "password" << " " << "-" << " " << "-" << " " << "-" << " " << "-" << " " << "-" << " " << "-" << " " << "-" << endl;
-		txt.close();
+		txt2 << "admin" << " " << "password" << " " << "-" << " " << "-" << " " << "-" << " " << "-" << " " << "-" << " " << "-" << " " << "-" << endl;
+		txt2.close();
 	}
 
 	txt.open("kullanici.txt", ios::in);
@@ -705,8 +707,10 @@ void MainMenu::YoneticiMenu()
 		break;
 	case 3:
 		sikayet_okuma();
+		break;
 	case 4:
 		kupon_tanimlama();
+		break;
 	case 5:
 		fatura_goruntuleme();
 	default:
@@ -900,7 +904,7 @@ void MainMenu::kupon_tanimlama()
 	cls();
 	cout << "Kupon tanimlanacak kullanici adini giriniz: ";
 	string hangikullanici; cin >> hangikullanici;
-	cout << "Kupon kodunu giriniz: ";
+	cout << "7 haneli kupon kodunu giriniz: ";
 	string yenikod; cin >> yenikod;
 
 	string k, s, ad, soyad, dogum, adres, tel, mail, kod;
@@ -922,13 +926,29 @@ void MainMenu::kupon_tanimlama()
 		}
 	}
 
+	cout << "Kupon tanimlandi." << endl;
+	cout << "Bir modul secerek isleminize devam edebilirsiniz." << endl;
+	cout << "[1] Menuye Don\n" << endl;
+	string selection = "0";
+	while (!Selection(selection, 1)) {
+		Selection(selection, 1);
+	}
+	switch (stoi(selection))
+	{
+	case 1:
+		YoneticiMenu();
+		break;
+	default:
+		break;
+	}
+	
 	txt.close();
 }
 
 
 bool MainMenu::MailVerification(string mail)
 {
-	if (mail.find("@") != string::npos && (mail.find(".com") != string::npos || mail.find(".net") != string::npos || mail.find(".org") != string::npos))
+	if (mail.find("@") != string::npos && mail.find(" ") == string::npos && (mail.find(".com") != string::npos || mail.find(".net") != string::npos || mail.find(".org") != string::npos))
 	{
 		return true;
 	}
@@ -1296,6 +1316,13 @@ void MainMenu::AlisverisiBitir() {
 	cls();
 	string selection = "0";
 	string ilce;
+	bool indirim = false;
+
+	if (kullanici.getIndirimKodu() != "0000000") {
+		cout << "Indirim kodunuz " << kullanici.getIndirimKodu() << " kullanildi ve fiyatta %15 indirim yapildi." << endl;
+		indirim = true;
+	}
+
 	if (kullanici.getAdresIlce() == "1")
 	{
 		ilce = "Ortahisar";
@@ -1326,10 +1353,20 @@ void MainMenu::AlisverisiBitir() {
 	}
 	else
 		ilce = "Hata!";
+
+	int tutar;
+
+	if (indirim) {
+		tutar = SepetFiyati() - (SepetFiyati() * 0.15);
+	}
+	else{
+		tutar = SepetFiyati();
+	}
+	
 	cout << "Satin aldiginiz urunler: " << endl;
 	for (int i = 0; i < sepetBoyutu; i++)
 		cout << "\t" << sepet[i].getIsim() << " " << sepet[i].getKategori() << " " << sepet[i].getBoyut() << "Beden " << sepet[i].getRenk() << " " << sepet[i].getFiyat() << "TL" << endl;
-	cout << "Toplam tutar: " << SepetFiyati() << "TL" << endl;
+	cout << "Toplam tutar: " << tutar << "TL" << endl;
 	cout << "Urunlerin gonderilecegi adres: " << ilce << endl;
 	ofstream faturatxt("fatura.txt", ios::app);
 	string urunler = "";
@@ -1339,7 +1376,36 @@ void MainMenu::AlisverisiBitir() {
 		urunler += "\\t" + sepet[i].getIsim() + " " + sepet[i].getKategori() + " " + sepet[i].getBoyut() + "Beden " + sepet[i].getRenk() + " " + to_string(sepet[i].getFiyat()) + "TL\\n";
 	}
 
-	faturatxt << "Alisverisi yapan: " << kullanici.getKullaniciAdi() << "\\nAlinan urunler: \\n" << urunler << "Gonderilecek adres: " << kullanici.getAdresIlce() << " Toplam fiyat: " << SepetFiyati() << "\\n" << "Gonderilen kurye: \\n\\t " << kurye.getAd() << " " << kurye.getSoyad() << "\\n\\t" << "Telefon numarasi: " << kurye.getTelNo() << "\\n\\t" << "Teslim saati: " << zaman << "\\n\\n" << endl;
+	if (!indirim) {
+		faturatxt << "Alisverisi yapan: " << kullanici.getKullaniciAdi() << "\\nAlinan urunler: \\n" << urunler << "Gonderilecek adres: " << kullanici.getAdresIlce() << " Toplam fiyat: " << tutar << "\\n" << "Gonderilen kurye: \\n\\t " << kurye.getAd() << " " << kurye.getSoyad() << "\\n\\t" << "Telefon numarasi: " << kurye.getTelNo() << "\\n\\t" << "Teslim saati: " << zaman << "\\n\\n" << endl;
+	}
+	else {
+		faturatxt << "Alisverisi yapan: " << kullanici.getKullaniciAdi() << "\\nAlinan urunler: \\n" << urunler << "Gonderilecek adres: " << kullanici.getAdresIlce() << " Toplam fiyat: " << tutar << "TL (" << kullanici.getIndirimKodu() << " koduyla %15 indirim uygulandi.)" << "\\n" << "Gonderilen kurye: \\n\\t " << kurye.getAd() << " " << kurye.getSoyad() << "\\n\\t" << "Telefon numarasi: " << kurye.getTelNo() << "\\n\\t" << "Teslim saati: " << zaman << "\\n\\n" << endl;
+		kullanici.setIndirimKodu("0");
+	}
+
+	if (indirim) {
+		string kullaniciAdi, sifre, k, s, tel, mail, ad, soyad, adres, dogum, kod;
+		ifstream i("kullanici.txt");
+		ofstream o("temp.txt");
+		kullanici.setIndirimKodu("0000000");
+		while (i >> k >> s >> tel >> mail >> ad >> soyad >> adres >> dogum >> kod)
+		{
+			if (k == kullanici.getKullaniciAdi())
+			{
+				o << k << " " << s << " " << tel << " " << mail << " " << ad << " " << soyad << " " << adres << " " << dogum << " " << kullanici.getIndirimKodu() << endl;
+			}
+			else
+			{
+				o << k << " " << s << " " << tel << " " << mail << " " << ad << " " << soyad << " " << adres << " " << dogum << " " << kod << endl;
+			}
+		}
+		i.close();
+		o.close();
+		remove("kullanici.txt");
+		rename("temp.txt", "kullanici.txt");
+	}
+	
 	faturatxt.close();
 	sepetBoyutu = 0;
 	cout << "Bir modul secerek isleminize devam edebilirsiniz.\n" << endl;

@@ -364,7 +364,7 @@ void MainMenu::start()
 	case 3:
 		cls();
 		cout << "Basariyla ciktiniz." << endl;
-		return;
+		exit(0);
 		break;
 	default:
 		cout << "Hatali secim yaptiniz, lutfen tekrar deneyiniz." << endl;

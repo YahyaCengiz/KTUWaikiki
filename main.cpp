@@ -713,8 +713,10 @@ void MainMenu::YoneticiMenu()
 		break;
 	case 5:
 		fatura_goruntuleme();
+	case 6:
+		start();
+		break;
 	default:
-		return;
 		break;
 	}
 
